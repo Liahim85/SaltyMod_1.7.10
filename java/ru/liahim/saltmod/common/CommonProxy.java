@@ -73,16 +73,11 @@ public class CommonProxy {
 	public static Item saltWortVenison = new SaltFood("saltWortVenison", 10, 9.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltWortVenison");
 	public static Item saltWortMeefSteak = new SaltFood("saltWortMeefSteak", 8, 7.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltWortMeefSteak");
 
-	//public static Item hemoglobin = new SaltFood("hemoglobin", 3, 1.2F, new PotionEffect(Potion.heal.id, 0)).setAlwaysEdible().setCreativeTab(saltTab).setTextureName("saltmod:hemoglobin");
-/*BOP
-	public static Item saltSaladVeggie = new SaltSaladVeggie().setUnlocalizedName("saltSaladVeggie");
-	public static Item saltSaladShroom = new SaltSaladShroom().setUnlocalizedName("saltSaladShroom");*/
-	
 	public static ArmorMaterial mudMaterial = EnumHelper.addArmorMaterial("mudMaterial", 4, new int[] {1, 1, 1, 1}, 15);
 
 //Milk
 	@SideOnly(Side.CLIENT)
-    public static IIcon milkIcon;
+	public static IIcon milkIcon;
 	public static Fluid milk;
 	
 	public static SimpleNetworkWrapper network;
@@ -110,15 +105,15 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.register(sEvent);
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(SaltMod.instance, new GuiExtractorHandler());
-	    network = NetworkRegistry.INSTANCE.newSimpleChannel("ExtractorChannel");
-	    network.registerMessage(ExtractorButtonMessage.Handler.class, ExtractorButtonMessage.class, 0, Side.SERVER);
+		network = NetworkRegistry.INSTANCE.newSimpleChannel("ExtractorChannel");
+		network.registerMessage(ExtractorButtonMessage.Handler.class, ExtractorButtonMessage.class, 0, Side.SERVER);
 	}
 	
 	public void init(FMLInitializationEvent event)
 	{
 		ModItems.init();
-	    ModBlocks.init();
-	    AchievSalt.init();
+		ModBlocks.init();
+		AchievSalt.init();
 
 		Configuration configTF = new Configuration(new File("./config", "TwilightForest.cfg"));
 		configTF.load();
@@ -217,9 +212,8 @@ public class CommonProxy {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltWortSalad), new ItemStack(Items.bowl), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.fermentedSaltWort), new ItemStack(Items.glass_bottle), new ItemStack(Items.ghast_tear), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.muffin), new ItemStack(ModItems.soda), new ItemStack(Items.egg), new ItemStack(Items.wheat), new ItemStack(Items.dye, 1, 3));
-		//GameRegistry.addShapelessRecipe(new ItemStack(Items.milk_bucket), ModItems.powderedMilk, Items.water_bucket.setContainerItem(null));
-		GameRegistry.addRecipe(new MilkBucketRecipe());
-		
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.milk_bucket), ModItems.powderedMilk, Items.water_bucket.setContainerItem(null));
+
 		GameRegistry.addRecipe(new ItemStack(ModItems.salt), "xxx", "xxx", "xxx", 'x', ModItems.saltPinch);
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltBlock), "xxx", "xxx", "xxx", 'x', ModItems.salt);
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltLamp), "x", "y", 'x', new ItemStack(ModBlocks.saltBlock, 1, 0), 'y', new ItemStack(Blocks.torch));
@@ -272,35 +266,35 @@ public class CommonProxy {
 	}
 	
 	public void postInit(FMLPostInitializationEvent event)
-    {
+	{
 //TF Items & Recipe
     	Item venisonCooked = GameRegistry.findItem("TwilightForest", "item.venisonCooked");
     	if (venisonCooked != null){
-    		GameRegistry.registerItem(saltVenisonCooked, "saltVenisonCooked");
-    		GameRegistry.registerItem(saltWortVenison, "saltWortVenison");
+		GameRegistry.registerItem(saltVenisonCooked, "saltVenisonCooked");
+		GameRegistry.registerItem(saltWortVenison, "saltWortVenison");
     		GameRegistry.addShapelessRecipe(new ItemStack(saltVenisonCooked),
-    	    new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(venisonCooked)});
+		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(venisonCooked)});
     		GameRegistry.addShapelessRecipe(new ItemStack(saltWortVenison),
     		new Object[] {new ItemStack(venisonCooked), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl)});}
-    	Item meefSteak = GameRegistry.findItem("TwilightForest", "item.meefSteak");
+	Item meefSteak = GameRegistry.findItem("TwilightForest", "item.meefSteak");
     	if (meefSteak != null){
     		GameRegistry.registerItem(saltMeefSteak, "saltMeefSteak");
     		GameRegistry.registerItem(saltWortMeefSteak, "saltWortMeefSteak");
     		GameRegistry.addShapelessRecipe(new ItemStack(saltMeefSteak),
-    	    new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefSteak)});
+		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefSteak)});
     		GameRegistry.addShapelessRecipe(new ItemStack(saltWortVenison),
-    	    new Object[] {new ItemStack(meefSteak), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl)});}
-    	Item meefStroganoff = GameRegistry.findItem("TwilightForest", "item.meefStroganoff");
+		new Object[] {new ItemStack(meefSteak), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl)});}
+	Item meefStroganoff = GameRegistry.findItem("TwilightForest", "item.meefStroganoff");
     	if (meefStroganoff != null){
     		GameRegistry.registerItem(saltMeefStroganoff, "saltMeefStroganoff");
     		GameRegistry.addShapelessRecipe(new ItemStack(saltMeefStroganoff),
-    	    new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefStroganoff)});}
-    	Item hydraChop = GameRegistry.findItem("TwilightForest", "item.hydraChop");
+		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefStroganoff)});}
+	Item hydraChop = GameRegistry.findItem("TwilightForest", "item.hydraChop");
     	if (hydraChop != null){
     		GameRegistry.registerItem(saltHydraChop, "saltHydraChop");
     		GameRegistry.addShapelessRecipe(new ItemStack(saltHydraChop),
-    	    new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(hydraChop)});}
-    	Block mushgloom = GameRegistry.findBlock("TwilightForest", "tile.TFPlant");
+		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(hydraChop)});}
+	Block mushgloom = GameRegistry.findBlock("TwilightForest", "tile.TFPlant");
     	if (mushgloom != null){
     		GameRegistry.registerItem(pickledMushgloom, "pickledMushgloom");
     		GameRegistry.addShapelessRecipe(new ItemStack(pickledMushgloom),
@@ -318,27 +312,5 @@ public class CommonProxy {
     		FluidContainerRegistry.registerFluidContainer(new FluidStack(milk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), FluidContainerRegistry.EMPTY_BUCKET);
     		ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
     	}
-//Blood Registry
-    	/*if (FluidRegistry.isFluidRegistered("blood") || FluidRegistry.isFluidRegistered("bloodfluid") || FluidRegistry.isFluidRegistered("blood_fluid"))
-    	{
-    		GameRegistry.registerItem(hemoglobin, "hemoglobin");
-    		Fluid blood = null;
-    		if (FluidRegistry.isFluidRegistered("blood")) {blood = FluidRegistry.getFluid("blood");
-    		ExtractRegistry.instance().addExtracting(blood, hemoglobin, 1000, 1.0F);}
-    		if (FluidRegistry.isFluidRegistered("bloodfluid")) {blood = FluidRegistry.getFluid("bloodfluid");
-    		ExtractRegistry.instance().addExtracting(blood, hemoglobin, 1000, 1.0F);}
-    		if (FluidRegistry.isFluidRegistered("blood_fluid")) {blood = FluidRegistry.getFluid("blood_fluid");
-    		ExtractRegistry.instance().addExtracting(blood, hemoglobin, 1000, 1.0F);}
-    	}*/
-/*BOP Items & Recipe
-    	Item saladShroom = GameRegistry.findItem("BiomesOPlenty", "item.Food");
-    	if (saladShroom != null){
-    		GameRegistry.registerItem(saltSaladVeggie, "saltSaladVeggie");
-    		GameRegistry.registerItem(saltSaladShroom, "saltSaladShroom");
-    		
-    	    GameRegistry.addShapelessRecipe(new ItemStack(saltSaladVeggie),
-    	    new Object[] {new ItemStack(saltPinch), new ItemStack(saladShroom, 1, 6)});    	    
-    	    GameRegistry.addShapelessRecipe(new ItemStack(saltSaladShroom),
-    	    new Object[] {new ItemStack(saltPinch), new ItemStack(saladShroom, 1, 7)});}*/
     }
 }
