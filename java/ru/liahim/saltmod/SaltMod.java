@@ -14,34 +14,34 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class SaltMod {
 	
-    public static final String MODID = "SaltMod";
-    public static final String NAME = "Salty Mod";
-    public static final String VERSION = "1.7.d";
+	public static final String MODID = "SaltMod";
+	public static final String NAME = "Salty Mod";
+	public static final String VERSION = "1.7.d";
 	
 	@Instance(MODID)
-    public static SaltMod instance;
+	public static SaltMod instance;
 
 	@SidedProxy(clientSide="ru.liahim.saltmod.client.ClientProxy", serverSide="ru.liahim.saltmod.common.CommonProxy")
 	public static CommonProxy proxy;
 
 	@EventHandler
-    public void preInit(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		this.proxy.preInit(event);
 	}
 	
-    @EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-    	this.proxy.init(event);
-    }
+	@EventHandler
+	public void init(FMLInitializationEvent event)
+	{
+		this.proxy.init(event);
+	}
 
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
-    	this.proxy.postInit(event);
-    }
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event)
+	{
+		this.proxy.postInit(event);
+	}
     
-    @EventHandler
-    public void serverStarting(FMLServerStartingEvent event){}
+	@EventHandler
+	public void serverStarting(FMLServerStartingEvent event){}
 }
