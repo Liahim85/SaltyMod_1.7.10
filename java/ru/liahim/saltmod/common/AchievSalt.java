@@ -43,8 +43,8 @@ public class AchievSalt {
 			saltLake,
 			saltCrystal);
 	
-    public static final void init()
-    {
-    	AchievementPage.registerAchievementPage(achievSaltPage);
-    }
+	public static final void init()
+	{
+		AchievementPage.registerAchievementPage(achievSaltPage);
+	}
 }
