@@ -23,22 +23,22 @@ public class GrassTop extends Block {
 	}
 	
 	@Override
-    public boolean isOpaqueCube()
+	public boolean isOpaqueCube()
 	{
 		return false;
 	}
 	
 	@SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-    	return side > 1 ? Blocks.grass.getIconSideOverlay() : this.blockIcon;
-    }
+	public IIcon getIcon(int side, int meta)
+	{
+		return side > 1 ? Blocks.grass.getIconSideOverlay() : this.blockIcon;
+	}
 	
-    @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister icon)
-    {
-    	this.blockIcon = icon.registerIcon("minecraft:grass_top");
-    }
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister icon)
+	{
+		this.blockIcon = icon.registerIcon("minecraft:grass_top");
+	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -48,45 +48,45 @@ public class GrassTop extends Block {
 		else return false;
 	}
 	
-    @SideOnly(Side.CLIENT)
-    public int getBlockColor()
-    {
-        double d0 = 0.5D;
-        double d1 = 1.0D;
-        return ColorizerGrass.getGrassColor(d0, d1);
-    }
+	@SideOnly(Side.CLIENT)
+	public int getBlockColor()
+	{
+		double d0 = 0.5D;
+		double d1 = 1.0D;
+		return ColorizerGrass.getGrassColor(d0, d1);
+	}
     
-    @SideOnly(Side.CLIENT)
-    public int getRenderColor(int p_149741_1_)
-    {
-        return this.getBlockColor();
-    }
+	@SideOnly(Side.CLIENT)
+	public int getRenderColor(int p_149741_1_)
+	{
+		return this.getBlockColor();
+	}
 	
-    @SideOnly(Side.CLIENT)
-    public int colorMultiplier(IBlockAccess world, int x, int y, int z)
-    {
-        int l = 0;
-        int i = 0;
-        int j = 0;
+	@SideOnly(Side.CLIENT)
+	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
+	{
+		int l = 0;
+		int i = 0;
+		int j = 0;
 
-        for (int k1 = -1; k1 <= 1; ++k1)
-        {
-            for (int l1 = -1; l1 <= 1; ++l1)
-            {
-                int i2 = world.getBiomeGenForCoords(x + l1, z + k1).getBiomeGrassColor(x + l1, y, z + k1);
-                l += (i2 & 16711680) >> 16;
-                i += (i2 & 65280) >> 8;
-                j += i2 & 255;
-            }
-        }
+		for (int k1 = -1; k1 <= 1; ++k1)
+		{
+			for (int l1 = -1; l1 <= 1; ++l1)
+			{
+				int i2 = world.getBiomeGenForCoords(x + l1, z + k1).getBiomeGrassColor(x + l1, y, z + k1);
+				l += (i2 & 16711680) >> 16;
+				i += (i2 & 65280) >> 8;
+				j += i2 & 255;
+			}
+		}
 
-        return (l / 9 & 255) << 16 | (i / 9 & 255) << 8 | j / 9 & 255;
-    }
+		return (l / 9 & 255) << 16 | (i / 9 & 255) << 8 | j / 9 & 255;
+	}
     
-    public Item getItemDropped(int meta, Random random, int fortune)
-    {
-        return null;
-    }
+	public Item getItemDropped(int meta, Random random, int fortune)
+	{
+		return null;
+	}
 	
 	protected boolean canSilkHarvest()
 	{
