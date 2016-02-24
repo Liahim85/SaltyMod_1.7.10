@@ -81,9 +81,9 @@ public class ModItems {
 	public static Item mudLeggings = new MudArmor("mudLeggings", CommonProxy.mudMaterial, 2);
 	public static Item mudBoots = new MudArmor("mudBoots", CommonProxy.mudMaterial, 3);
 	
-    public static final void init()
-    {
-    	GameRegistry.registerItem(achievItem, "achivItem");
+	public static final void init()
+	{
+		GameRegistry.registerItem(achievItem, "achivItem");
 //Main Items
 		GameRegistry.registerItem(salt, "salt");
 		GameRegistry.registerItem(saltPinch, "saltPinch");
@@ -143,6 +143,6 @@ public class ModItems {
 //Milk
 		GameRegistry.registerItem(powderedMilk, "powderedMilk");
 		
-    	GameRegistry.registerItem(escargot, "escargot");
-    }
+		GameRegistry.registerItem(escargot, "escargot");
+	}
 }
