@@ -45,8 +45,8 @@ public class ModBlocks {
 	public static Block saltCrystal = new SaltCrystal("saltCrystal", tab);
 	public static Block saltWort = new SaltWort("saltWort", null);
 	
-    public static final void init()
-    {
+	public static final void init()
+	{
 		GameRegistry.registerBlock(saltOre, "saltOre");
 		GameRegistry.registerBlock(saltLake, "saltLake");
 		GameRegistry.registerBlock(saltBlock, ItemSaltBlock.class, "saltBlock");
@@ -64,5 +64,5 @@ public class ModBlocks {
 		GameRegistry.registerBlock(extractorSteam, "extractorSteam").setLightLevel(0.9F);
 		GameRegistry.registerBlock(saltCrystal, "saltCrystal");
 		GameRegistry.registerBlock(saltWort, "saltWort");
-    }
+	}
 }
