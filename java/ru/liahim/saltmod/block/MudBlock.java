@@ -28,29 +28,29 @@ public class MudBlock extends BlockFalling {
 	}
 	
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
-    {
-        float f = 0.125F;
-        return AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)((float)(y + 1) - f), (double)(z + 1));
-    }
+	{
+		float f = 0.125F;
+		return AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)((float)(y + 1) - f), (double)(z + 1));
+	}
 	
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
-    {
+	{
 		entity.motionX *= 0.4D;
 		entity.motionZ *= 0.4D;
-    }
+	}
 	
-    public Item getItemDropped(int meta, Random rand, int fortune)
-    {
-        return ModItems.mineralMud;
-    }
+	public Item getItemDropped(int meta, Random rand, int fortune)
+	{
+		return ModItems.mineralMud;
+	}
 
-    public int quantityDropped(Random rand)
-    {
-        return 4;
-    }
+	public int quantityDropped(Random rand)
+	{
+		return 4;
+	}
     
-    public MapColor getMapColor(int meta)
-    {
-        return MapColor.grayColor;
-    }
+	public MapColor getMapColor(int meta)
+	{
+		return MapColor.grayColor;
+	}
 }
