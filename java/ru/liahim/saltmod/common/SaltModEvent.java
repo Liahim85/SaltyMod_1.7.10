@@ -41,61 +41,62 @@ public class SaltModEvent {
 	private static final AttributeModifier feetModifierUP = (new AttributeModifier(uuid4, "mudBoostUP", 4F, 0));
 	
 	@SubscribeEvent
-	public void onPlayerAttack(AttackEntityEvent e) {
-
+	public void onPlayerAttack(AttackEntityEvent e)
+	{
 		World world = e.entityPlayer.worldObj;
 
-	    if (!world.isRemote && e.entityPlayer != null && e.target != null && e.target instanceof EntityLivingBase) {
-
-	    	EntityPlayer player = e.entityPlayer;
+		if (!world.isRemote && e.entityPlayer != null && e.target != null && e.target instanceof EntityLivingBase)
+		{
+			EntityPlayer player = e.entityPlayer;
 			EntityLivingBase target = (EntityLivingBase)e.target;
-	        ItemStack is = player.getHeldItem();
-	        Block block = null;
+			ItemStack is = player.getHeldItem();
+			Block block = null;
 
-	    	if (is != null && EntityList.getEntityString(target) != null &&
-	    	  ((EntityList.getEntityString(target).toLowerCase().contains("slime") &&
-	    		!EntityList.getEntityString(target).toLowerCase().contains("lava")) ||
-	    		EntityList.getEntityString(target).toLowerCase().contains("witch"))) {
+	    		if (is != null && EntityList.getEntityString(target) != null &&
+		    	  ((EntityList.getEntityString(target).toLowerCase().contains("slime") &&
+			  !EntityList.getEntityString(target).toLowerCase().contains("lava")) ||
+			  EntityList.getEntityString(target).toLowerCase().contains("witch")))
+			{
+				if (is.getItem() instanceof ItemBlock && Block.getBlockFromItem(is.getItem()) != Blocks.air)
+				{block = Block.getBlockFromItem(is.getItem());}
 
-	    		if (is.getItem() instanceof ItemBlock && Block.getBlockFromItem(is.getItem()) != Blocks.air) {
-	                block = Block.getBlockFromItem(is.getItem());	                
-	            }
-
-	    		if (block != null) {
-	    			if (block == ModBlocks.saltCrystal) {
-	    				target.attackEntityFrom(DamageSource.cactus, 30.0F);
-	    				world.playSoundEffect(player.posX, player.posY, player.posZ, "dig.stone", 2.0F, 1.0F);
-	    				world.playSoundEffect(player.posX, player.posY, player.posZ, "dig.glass", 2.0F, 2.0F);
+				if (block != null)
+				{
+					if (block == ModBlocks.saltCrystal)
+					{
+						target.attackEntityFrom(DamageSource.cactus, 30.0F);
+						world.playSoundEffect(player.posX, player.posY, player.posZ, "dig.stone", 2.0F, 1.0F);
+						world.playSoundEffect(player.posX, player.posY, player.posZ, "dig.glass", 2.0F, 2.0F);
 	    				
-	    				if (!player.capabilities.isCreativeMode) {
-	    					
-	    					--is.stackSize;
-	    					if (is.stackSize == 0) {player.setCurrentItemOrArmor(0, null);}
-	    					
-	    					EntityItem EI = new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(ModItems.saltPinch));
-	    					EI.delayBeforeCanPickup = 10;
-	    					world.spawnEntityInWorld(EI);
-	    					
-	    					if (EntityList.getEntityString(target).toLowerCase().contains("witch"))
-	    					{player.addStat(AchievSalt.saltWitch, 1);}
-	    					
-	    					if (target instanceof EntitySlime)
+	    					if (!player.capabilities.isCreativeMode)
 	    					{
-		    					EntityItem EIS = new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(ModItems.escargot));
-		    					EI.delayBeforeCanPickup = 10;
-		    					world.spawnEntityInWorld(EIS);
-	    						player.addStat(AchievSalt.saltSlime, 1);
+	    						--is.stackSize;
+	    						if (is.stackSize == 0) {player.setCurrentItemOrArmor(0, null);}
+	    					
+	    						EntityItem EI = new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(ModItems.saltPinch));
+	    						EI.delayBeforeCanPickup = 10;
+	    						world.spawnEntityInWorld(EI);
+	    					
+	    						if (EntityList.getEntityString(target).toLowerCase().contains("witch"))
+	    						{player.addStat(AchievSalt.saltWitch, 1);}
+	    					
+	    						if (target instanceof EntitySlime)
+	    						{
+		    						EntityItem EIS = new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(ModItems.escargot));
+		    						EI.delayBeforeCanPickup = 10;
+		    						world.spawnEntityInWorld(EIS);
+	    							player.addStat(AchievSalt.saltSlime, 1);
+	    						}
 	    					}
 	    				}
 	    			}
 	    		}
-	    	}
-	    }
+		}
 	}
 
 	@SubscribeEvent
-	public void updatePlayerTick(TickEvent.PlayerTickEvent event) {
-		
+	public void updatePlayerTick(TickEvent.PlayerTickEvent event)
+	{
 		if (event.phase == TickEvent.Phase.START && event.side == Side.SERVER)
 		{
 			EntityPlayer player = event.player;
@@ -111,41 +112,41 @@ public class SaltModEvent {
 
 				IAttributeInstance boost = event.player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
 
-				if (head != null && boost.getModifier(uuid1) == null && head.getItem() == ModItems.mudHelmet) {
+				if (head != null && boost.getModifier(uuid1) == null && head.getItem() == ModItems.mudHelmet)
+				{boost.applyModifier(headModifierUP);}
 
-					boost.applyModifier(headModifierUP);}
-
-				if ((head == null || head.getItem() != ModItems.mudHelmet) && boost.getModifier(uuid1) != null) {
-
+				if ((head == null || head.getItem() != ModItems.mudHelmet) && boost.getModifier(uuid1) != null)
+				{
 					boost.removeModifier(headModifierUP);
-					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}}
+					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}
+				}
 
-				if (body != null && boost.getModifier(uuid2) == null && body.getItem() == ModItems.mudChestplate) {
-
-					boost.applyModifier(bodyModifierUP);}
+				if (body != null && boost.getModifier(uuid2) == null && body.getItem() == ModItems.mudChestplate)
+				{boost.applyModifier(bodyModifierUP);}
 				
-				if ((body == null || body.getItem() != ModItems.mudChestplate) && boost.getModifier(uuid2) != null) {
-
+				if ((body == null || body.getItem() != ModItems.mudChestplate) && boost.getModifier(uuid2) != null)
+				{
 					boost.removeModifier(bodyModifierUP);
-					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}}
+					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());
+				}
 
-				if (legs != null && boost.getModifier(uuid3) == null && legs.getItem() == ModItems.mudLeggings) {
-
-					boost.applyModifier(legsModifierUP);}
+				if (legs != null && boost.getModifier(uuid3) == null && legs.getItem() == ModItems.mudLeggings)
+				{boost.applyModifier(legsModifierUP);}
 				
-				if ((legs == null || legs.getItem() != ModItems.mudLeggings) && boost.getModifier(uuid3) != null) {
-
+				if ((legs == null || legs.getItem() != ModItems.mudLeggings) && boost.getModifier(uuid3) != null)
+				{
 					boost.removeModifier(legsModifierUP);
-					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}}
+					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}
+				}
 
-				if (((feet != null && feet.getItem() == ModItems.mudBoots) || mud) && boost.getModifier(uuid4) == null) {
+				if (((feet != null && feet.getItem() == ModItems.mudBoots) || mud) && boost.getModifier(uuid4) == null)
+				{boost.applyModifier(feetModifierUP);}
 
-					boost.applyModifier(feetModifierUP);}
-
-				if ((feet == null || feet.getItem() != ModItems.mudBoots) && !mud && boost.getModifier(uuid4) != null) {
-
+				if ((feet == null || feet.getItem() != ModItems.mudBoots) && !mud && boost.getModifier(uuid4) != null)
+				{
 					boost.removeModifier(feetModifierUP);
-					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}}	
+					if (player.getHealth() > player.getMaxHealth()) {player.setHealth(player.getMaxHealth());}
+				}	
 				
 				if (player.getHealth() < player.getMaxHealth() && player.getFoodStats().getFoodLevel() > 0)
 				{
@@ -183,62 +184,62 @@ public class SaltModEvent {
 	}
 
 //MilkIconRegister
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(TextureStitchEvent.Pre event)
-    {    	
-    	if (event.map.getTextureType() == 0 && CommonProxy.milk != null && FluidRegistry.isFluidRegistered(CommonProxy.milk))
-    	{
-    		CommonProxy.milkIcon = event.map.registerIcon("saltmod:Milk");
-    	}
-    }
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(TextureStitchEvent.Pre event)
+	{    	
+		if (event.map.getTextureType() == 0 && CommonProxy.milk != null && FluidRegistry.isFluidRegistered(CommonProxy.milk))
+		{
+			CommonProxy.milkIcon = event.map.registerIcon("saltmod:Milk");
+		}
+	}
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public void registerIcons(TextureStitchEvent.Post event)
-    {
-    	if (CommonProxy.milk != null && FluidRegistry.isFluidRegistered(CommonProxy.milk))
-    	{
-    		CommonProxy.milk.setIcons(CommonProxy.milkIcon);
-    	}
-    }
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(TextureStitchEvent.Post event)
+	{
+		if (CommonProxy.milk != null && FluidRegistry.isFluidRegistered(CommonProxy.milk))
+		{
+			CommonProxy.milk.setIcons(CommonProxy.milkIcon);
+		}
+	}
     
 //Achievements
-    @SubscribeEvent
+	@SubscribeEvent
 	public void itemPickup(EntityItemPickupEvent event)
-    {
-    	World world = event.entityPlayer.worldObj;
-    	
-    	if (!world.isRemote)
-    	{
-    		if (event.item.getEntityItem().getItem() == ModItems.salt)
-    		{
-    			event.entityPlayer.addStat(AchievSalt.salt, 1);
-    		}
+	{
+		World world = event.entityPlayer.worldObj;
+
+		if (!world.isRemote)
+		{
+    			if (event.item.getEntityItem().getItem() == ModItems.salt)
+    			{
+    				event.entityPlayer.addStat(AchievSalt.salt, 1);
+    			}
     		
-    		if (event.item.getEntityItem().getItem() == Item.getItemFromBlock(ModBlocks.saltCrystal))
-    		{
-    			event.entityPlayer.addStat(AchievSalt.saltCrystalGet, 1);
-    		}
+    			if (event.item.getEntityItem().getItem() == Item.getItemFromBlock(ModBlocks.saltCrystal))
+    			{
+    				event.entityPlayer.addStat(AchievSalt.saltCrystalGet, 1);
+    			}
     		
-    		if (event.item.getEntityItem().getItem() == ModItems.mineralMud)
-    		{
-    			event.entityPlayer.addStat(AchievSalt.mineralMud, 1);
-    		}
+    			if (event.item.getEntityItem().getItem() == ModItems.mineralMud)
+    			{
+    				event.entityPlayer.addStat(AchievSalt.mineralMud, 1);
+    			}
     		
-    		if (event.item.getEntityItem().getItem() == ModItems.saltWortSeed)
-    		{
-    			event.entityPlayer.addStat(AchievSalt.saltWort, 1);
-    		}
-    	}
-    }
+    			if (event.item.getEntityItem().getItem() == ModItems.saltWortSeed)
+    			{
+    				event.entityPlayer.addStat(AchievSalt.saltWort, 1);
+    			}
+		}
+	}
     
-    @SubscribeEvent
-    public void crafting(ItemCraftedEvent event)
-    {
-    	if(event.crafting.getItem() == ModItems.mineralMud)
-    	{
-    		event.player.addStat(AchievSalt.mineralMud, 1);
-    	}
-    }
+	@SubscribeEvent
+	public void crafting(ItemCraftedEvent event)
+	{
+		if(event.crafting.getItem() == ModItems.mineralMud)
+		{
+			event.player.addStat(AchievSalt.mineralMud, 1);
+		}
+	}
 }
