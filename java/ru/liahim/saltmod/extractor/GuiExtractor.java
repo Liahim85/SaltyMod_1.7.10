@@ -26,7 +26,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class GuiExtractor extends GuiContainer
 {
-    private static final ResourceLocation guiTextures = new ResourceLocation("saltmod:textures/gui/container/extraktor.png");
+    private static final ResourceLocation guiTextures = new ResourceLocation("saltmod:textures/gui/container/extractor.png");
     private TileEntityExtractor te;
     private GuiExtractorButton button;
     
