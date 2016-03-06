@@ -35,6 +35,7 @@ item.saltWortSeed.name=Солерос
 item.soda.name=Шипучая зола
 item.mineralMud.name=Минеральная грязь
 item.powderedMilk.name=Сухое молоко
+item.powderedMilk.tooltip=Смешать с ведром воды и пустым ведром
 
 item.saltBeefCooked.name=Стейк с солью
 item.saltPorkchopCooked.name=Жареная свинина с солью
