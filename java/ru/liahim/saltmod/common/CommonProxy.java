@@ -212,7 +212,7 @@ public class CommonProxy {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltWortSalad), new ItemStack(Items.bowl), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.fermentedSaltWort), new ItemStack(Items.glass_bottle), new ItemStack(Items.ghast_tear), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.muffin), new ItemStack(ModItems.soda), new ItemStack(Items.egg), new ItemStack(Items.wheat), new ItemStack(Items.dye, 1, 3));
-		GameRegistry.addShapelessRecipe(new ItemStack(Items.milk_bucket), ModItems.powderedMilk, Items.water_bucket.setContainerItem(null));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.milk_bucket), new ItemStack(ModItems.powderedMilk), new ItemStack(Items.water_bucket), new ItemStack(Items.bucket));
 
 		GameRegistry.addRecipe(new ItemStack(ModItems.salt), "xxx", "xxx", "xxx", 'x', ModItems.saltPinch);
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltBlock), "xxx", "xxx", "xxx", 'x', ModItems.salt);
