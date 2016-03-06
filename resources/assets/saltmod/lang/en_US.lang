@@ -35,6 +35,7 @@ item.saltWortSeed.name=Saltwort
 item.soda.name=Effervescent Ash
 item.mineralMud.name=Mineral Mud
 item.powderedMilk.name=Powdered Milk
+item.powderedMilk.tooltip=Mixed with Water Bucket & Bucket
 
 item.saltBeefCooked.name=Salty Steak
 item.saltPorkchopCooked.name=Salty Cooked Porkchop
