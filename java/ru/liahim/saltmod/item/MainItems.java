@@ -10,4 +10,9 @@ public class MainItems extends Item {
 		this.setCreativeTab(tab);
 		this.setTextureName("saltmod:" + textureName);
 	}
+	
+	public void addInformation(ItemStack is, EntityPlayer player, List list, boolean flag) {
+		if (this.getUnlocalizedName().equals(ModItems.powderedMilk.getUnlocalizedName()))
+		list.add(I18n.format(getUnlocalizedName() + ".tooltip"));
+	}
 }
