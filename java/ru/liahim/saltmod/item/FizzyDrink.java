@@ -35,8 +35,8 @@ public class FizzyDrink extends Item {
         
         if (!world.isRemote)
         {
-        	player.clearActivePotions();
-            player.extinguish();
+        	player.curePotionEffects(new ItemStack(Items.milk_bucket));
+        	player.extinguish();
         }
         return item.stackSize <= 0 ? new ItemStack(Items.glass_bottle) : item;
     }
