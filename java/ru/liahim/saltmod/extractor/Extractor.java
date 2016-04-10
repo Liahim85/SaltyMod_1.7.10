@@ -1,4 +1,4 @@
-package ru.liahim.saltmod.extractor;
+package ru.liahim.saltmod.block;
 
 import java.util.Random;
 
@@ -25,8 +25,9 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidHandler;
 import ru.liahim.saltmod.SaltMod;
-import ru.liahim.saltmod.client.ClientProxy;
-import ru.liahim.saltmod.common.ModBlocks;
+import ru.liahim.saltmod.common.ClientProxy;
+import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.tileentity.TileEntityExtractor;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -392,7 +393,8 @@ public class Extractor extends BlockContainer {
             double f6 = (double)((float)z + random.nextFloat() * 0.4F + 0.3F);
             double f7 = (double)((float)x + random.nextFloat());
             double f8 = (double)((float)z + random.nextFloat());
-            boolean clear = !world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN);
+            boolean clear = !world.isSideSolid(x, y + 1, z, ForgeDirection.DOWN) &&
+            		FluidRegistry.lookupFluidForBlock(world.getBlock(x, y + 1, z)) == null;
             boolean ceiling = world.isSideSolid(x, y + 2, z, ForgeDirection.DOWN);
 
             if (l == 4)
