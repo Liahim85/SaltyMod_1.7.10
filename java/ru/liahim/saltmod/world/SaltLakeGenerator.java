@@ -5,14 +5,16 @@ import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
-import ru.liahim.saltmod.common.CommonProxy;
-import ru.liahim.saltmod.common.ModBlocks;
+import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.init.SaltConfig;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class SaltLakeGenerator implements IWorldGenerator {
 
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+    @Override
+	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
         
 	switch(world.provider.dimensionId) {
 		case 0:
@@ -26,18 +28,19 @@ public class SaltLakeGenerator implements IWorldGenerator {
 		if (!world.isRemote)
 		{
 		
-		int rad = CommonProxy.saltLakeRadius;
+		int rad = SaltConfig.saltLakeRadius;
 		
         int randPosX = X1 + rand.nextInt(16);
         int randPosZ = Z1 + rand.nextInt(16);
         
-/*Шанс*/
-    	if (rand.nextInt(CommonProxy.saltLakeGroupRarity) == 0){
+//Chance
+    	if (rand.nextInt(SaltConfig.saltLakeGroupRarity) == 0 &&
+    		world.getBiomeGenForCoords(randPosX, randPosZ) != BiomeGenBase.swampland) {
     		
-/*Количество озёр в группе*/
-    	for (int G = 0; G < CommonProxy.saltLakeQuantity; G++){
+//The number of lakes in the group
+    	for (int G = 0; G < SaltConfig.saltLakeQuantity; G++){
     	
-/*Выбор места*/	
+//Site selection	
         for (int randPosY = 60; randPosY < 75; randPosY++){
 
         if ((world.getBlock(randPosX, randPosY, randPosZ) == Blocks.grass ||
@@ -61,7 +64,7 @@ public class SaltLakeGenerator implements IWorldGenerator {
         		world.setBlock(randPosX, randPosY - 5, randPosZ, Blocks.stone);
         		world.setBlock(randPosX, randPosY - 6, randPosZ, Blocks.stone);
         	
-/*Рост*/
+//Growth
         	for (int i = 2; i <= rad; i++){
         		
             for (int x = randPosX - i; x <= randPosX + i; x++) {
@@ -134,7 +137,7 @@ public class SaltLakeGenerator implements IWorldGenerator {
             
             }
             
-/*Оформление берегов*/
+//Making shores
             for (int x = randPosX - rad; x <= randPosX + rad; x++) {
             for (int z = randPosZ - rad; z <= randPosZ + rad; z++) {
             	
@@ -335,7 +338,7 @@ public class SaltLakeGenerator implements IWorldGenerator {
             }
             }
             
-/*Дно и солерос*/
+//The bottom and SaltWort
             for (int x = randPosX - rad; x <= randPosX + rad; x++) {
             for (int z = randPosZ - rad; z <= randPosZ + rad; z++) {
             	
@@ -370,8 +373,8 @@ public class SaltLakeGenerator implements IWorldGenerator {
         }
         }
         
-        randPosX = randPosX + rand.nextInt(CommonProxy.saltLakeDistance) - CommonProxy.saltLakeDistance/2;
-        randPosZ = randPosZ + rand.nextInt(CommonProxy.saltLakeDistance) - CommonProxy.saltLakeDistance/2;
+        randPosX = randPosX + rand.nextInt(SaltConfig.saltLakeDistance) - SaltConfig.saltLakeDistance/2;
+        randPosZ = randPosZ + rand.nextInt(SaltConfig.saltLakeDistance) - SaltConfig.saltLakeDistance/2;
         
 		}
 		}
