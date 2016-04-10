@@ -11,9 +11,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import ru.liahim.saltmod.common.AchievSalt;
-import ru.liahim.saltmod.common.ModBlocks;
-import ru.liahim.saltmod.common.ModItems;
+import ru.liahim.saltmod.init.AchievSalt;
+import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.init.ModItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
