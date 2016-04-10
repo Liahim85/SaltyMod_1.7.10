@@ -10,12 +10,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import ru.liahim.saltmod.common.ModItems;
+import ru.liahim.saltmod.init.ModItems;
 
 public class MudBlock extends BlockFalling {
-	
-	private static int tick = 0;
-	
+
 	public MudBlock(String name, CreativeTabs tab) {
 		super(Material.ground);
 		this.setBlockName(name);
@@ -27,28 +25,33 @@ public class MudBlock extends BlockFalling {
 		this.setBlockTextureName("saltmod:MudBlock");
 	}
 	
+	@Override
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		float f = 0.125F;
-		return AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)((float)(y + 1) - f), (double)(z + 1));
+		return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + 1 - f, z + 1);
 	}
 	
+	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
 		entity.motionX *= 0.4D;
 		entity.motionZ *= 0.4D;
 	}
 	
+	@Override
 	public Item getItemDropped(int meta, Random rand, int fortune)
 	{
 		return ModItems.mineralMud;
 	}
 
+	@Override
 	public int quantityDropped(Random rand)
 	{
 		return 4;
 	}
     
+	@Override
 	public MapColor getMapColor(int meta)
 	{
 		return MapColor.grayColor;

@@ -26,8 +26,8 @@ import ru.liahim.saltmod.init.SaltConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class SaltWort extends BlockBush {
-	
+public class SaltWort extends BlockBush implements IGrowable {
+
 	public SaltWort(String name, CreativeTabs tab) {
 		this.setBlockName(name);
 		this.setStepSound(soundTypeGrass);
@@ -35,7 +35,7 @@ public class SaltWort extends BlockBush {
 		this.setTickRandomly(true);
 		this.setBlockTextureName("saltmod:SaltWort");
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	private IIcon STAGE_1;
 	@SideOnly(Side.CLIENT)
@@ -46,193 +46,180 @@ public class SaltWort extends BlockBush {
 	private IIcon STAGE_4;
 	@SideOnly(Side.CLIENT)
 	private IIcon DEAD;
-	
+
+	@Override
 	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
-	{
-		if (meta < 0 || meta > 5)
-		{
+	public IIcon getIcon(int side, int meta) {
+		if (meta < 0 || meta > 5) {
 			meta = 0;
 		}
 		return meta == 1 ? this.STAGE_1 : (meta == 2) ? this.STAGE_2 : (meta == 3) ? this.STAGE_3 :
-			   meta == 4 ? this.STAGE_4 : meta == 5 ? this.DEAD : this.blockIcon;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister par1)
-	{
-    	this.blockIcon = par1.registerIcon(this.getTextureName());
-        this.STAGE_1 = par1.registerIcon(this.getTextureName() + "_1");
-        this.STAGE_2 = par1.registerIcon(this.getTextureName() + "_2");
-        this.STAGE_3 = par1.registerIcon(this.getTextureName() + "_3");
-        this.STAGE_4 = par1.registerIcon(this.getTextureName() + "_4");
-        this.DEAD = par1.registerIcon(this.getTextureName() + "_D");
-	}
-	
-	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
-    {
-		int meta = world.getBlockMetadata(x, y, z);
-		float g = 0.375F;
-		float v = 0.625F;
-		if (meta == 1) {g = 0.375F; v = 0.5F;}
-		if (meta == 2) {g = 0.3125F; v = 0.375F;}
-		if (meta == 3) {g = 0.25F; v = 0.25F;}
-		if (meta == 4) {g = 0.1875F; v = 0.125F;}
-		if (meta == 5) {g = 0.3125F; v = 0.5625F;}
-		this.setBlockBounds(0.0F + g, 0.0F, 0.0F + g, 1.0F - g, 1.0F - v, 1.0F - g);
-    }
-	
-	public boolean canBlockStay(World world, int x, int y, int z)
-	{
-		Block B = world.getBlock(x, y - 1, z);
-		if ((B.getMaterial() == Material.grass || (B.getMaterial() == Material.ground && B != ModBlocks.saltDirt) ||
-			B.getMaterial() == Material.sand || B.getMaterial() == Material.clay ||
-		   (B == ModBlocks.saltDirt && world.getBlockMetadata(x, y - 1, z) == 0)) && world.doesBlockHaveSolidTopSurface(world, x, y - 1, z))
-		{
-		return true;
-		}
-		
-		else
-        {
-	 	return false;
-        }
+				meta == 4 ? this.STAGE_4 : meta == 5 ? this.DEAD : this.blockIcon;
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune)
-	{
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister par1) {
+		this.blockIcon = par1.registerIcon(this.getTextureName());
+		this.STAGE_1 = par1.registerIcon(this.getTextureName() + "_1");
+		this.STAGE_2 = par1.registerIcon(this.getTextureName() + "_2");
+		this.STAGE_3 = par1.registerIcon(this.getTextureName() + "_3");
+		this.STAGE_4 = par1.registerIcon(this.getTextureName() + "_4");
+		this.DEAD = par1.registerIcon(this.getTextureName() + "_D");
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
+		int meta = world.getBlockMetadata(x, y, z);
+		float g = 0.375F;
+		float v = 0.625F;
+		if (meta == 1) {
+			g = 0.375F;
+			v = 0.5F;
+		}
+		if (meta == 2) {
+			g = 0.3125F;
+			v = 0.375F;
+		}
+		if (meta == 3) {
+			g = 0.25F;
+			v = 0.25F;
+		}
+		if (meta == 4) {
+			g = 0.1875F;
+			v = 0.125F;
+		}
+		if (meta == 5) {
+			g = 0.3125F;
+			v = 0.5625F;
+		}
+		this.setBlockBounds(0.0F + g, 0.0F, 0.0F + g, 1.0F - g, 1.0F - v, 1.0F - g);
+	}
+
+	@Override
+	public boolean canBlockStay(World world, int x, int y, int z) {
+		Block B = world.getBlock(x, y - 1, z);
+		return (B.getMaterial() == Material.grass || (B.getMaterial() == Material.ground && B != ModBlocks.saltDirt) ||
+				B.getMaterial() == Material.sand || B.getMaterial() == Material.clay ||
+				(B == ModBlocks.saltDirt && world.getBlockMetadata(x, y - 1, z) == 0)) && World.doesBlockHaveSolidTopSurface(world, x, y - 1, z);
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
 		ArrayList<ItemStack> drop = new ArrayList<ItemStack>();
 		Item seed = ModItems.saltWortSeed;
 		Random rand = new Random();
 		int i;
-		
-		if (meta <= 1)
-		{
+
+		if (meta <= 1) {
 			drop.add(new ItemStack(seed));
 		}
-		if (meta == 2)
-		{
+		if (meta == 2) {
 			i = rand.nextInt(2) + 1;
 			drop.add(new ItemStack(seed, i));
 		}
-		if (meta == 3)
-		{
+		if (meta == 3) {
 			i = rand.nextInt(3) + 1;
 			drop.add(new ItemStack(seed, i));
 		}
-		if (meta == 4)
-		{
+		if (meta == 4) {
 			i = rand.nextInt(4) + 2;
 			drop.add(new ItemStack(seed, i));
 		}
-		
+
 		return drop;
 	}
-	
-	public void updateTick(World world, int x, int y, int z, Random rand)
-	{
-		if (!world.isRemote)
-		{
-			
-		Block B = world.getBlock(x, y - 1, z);
-		int M = world.getBlockMetadata(x, y - 1, z);
-		
-		if ((B == ModBlocks.saltDirt && M == 0) || (B == ModBlocks.saltDirtLite && (M == 1 || M == 2)))
-		{
-			if (rand.nextInt(CommonProxy.saltWortGrowSpeed) == 0)
-			{
-				if (world.getBlockMetadata(x, y, z) == 0)
-				{world.setBlock(x, y, z, this, 1, 3);}
-				else if (world.getBlockMetadata(x, y, z) == 1 && world.getFullBlockLightValue(x, y, z) >= 12)
-				{
-					world.setBlock(x, y, z, this, 2, 3);
-					
-					if (B == ModBlocks.saltDirt)
-					{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);}
-					else if (B == ModBlocks.saltDirtLite && M == 2)
-					{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);}
-					else if (B == ModBlocks.saltDirtLite && M == 1)
-					{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);}
-				}
-				else if ((world.getBlockMetadata(x, y, z) >= 2 || world.getBlockMetadata(x, y, z) <= 4) && world.getFullBlockLightValue(x, y, z) >= 12)
-				{
-					if (world.getBlockMetadata(x, y, z) == 2 || world.getBlockMetadata(x, y, z) == 3)
-					{
-						if (world.getBlockMetadata(x, y, z) == 2)
-						{world.setBlock(x, y, z, this, 3, 3);}
-						else if (world.getBlockMetadata(x, y, z) == 3)
-						{world.setBlock(x, y, z, this, 4, 3);}
 
-						if (B == ModBlocks.saltDirt)
-						{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);}
-						else if (B == ModBlocks.saltDirtLite && M == 2)
-						{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);}
-						else if (B == ModBlocks.saltDirtLite && M == 1)
-						{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);}
-					}
-					
-					int S = 0;
-					
-					for (int x1 = x-2; x1 <= x+2; x1++) {
-					for (int z1 = z-2; z1 <= z+2; z1++) {
-						
-						if (world.getBlock(x1, y, z1) == ModBlocks.saltWort)
-						{S = S + 1;}
-					}
-					}
-						
-					if (S < 7)
-					{
-						for (int x2 = x-1; x2 <= x+1; x2++) {
-						for (int z2 = z-1; z2 <= z+1; z2++) {
-							
-						Block B2 = world.getBlock(x2, y - 1, z2);
-						int M2 = world.getBlockMetadata(x2, y - 1, z2);
-
-						if (rand.nextInt(8) == 0 && world.isAirBlock(x2, y, z2) &&
-						((B2 == ModBlocks.saltDirtLite && (M2 == 1 || M2 == 2)) || (B2 == ModBlocks.saltDirt && M2 == 0)) &&
-						((B == ModBlocks.saltDirtLite && (M == 1 || M == 2)) || (B == ModBlocks.saltDirt && M == 0)))
-						{
-							world.setBlock(x2, y, z2, ModBlocks.saltWort);
-							
-							if (B2 == ModBlocks.saltDirt)
-							{world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite, 2, 3);}
-							else if (B2 == ModBlocks.saltDirtLite && M2 == 2)
-							{world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite, 1, 3);}
-							else if (B2 == ModBlocks.saltDirtLite && M2 == 1)
-							{world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite);}
-							
-							if (world.getBlockMetadata(x, y, z) == 4)
-							{
-								if (B == ModBlocks.saltDirt)
-								{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);}
-								else if (B == ModBlocks.saltDirtLite && M == 2)
-								{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);}
-								else if (B == ModBlocks.saltDirtLite && M == 1)
-								{world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);}
+	@Override
+	public void updateTick(World world, int x, int y, int z, Random rand) {
+		if (!world.isRemote) {
+			Block B = world.getBlock(x, y - 1, z);
+			int M = world.getBlockMetadata(x, y - 1, z);
+			if ((B == ModBlocks.saltDirt && M == 0) || (B == ModBlocks.saltDirtLite && (M == 1 || M == 2))) {
+				if (rand.nextInt(SaltConfig.saltWortGrowSpeed) == 0) {
+					if (world.getBlockMetadata(x, y, z) == 0) {
+						world.setBlock(x, y, z, this, 1, 3);
+					} else if (world.getBlockMetadata(x, y, z) == 1 && world.getFullBlockLightValue(x, y, z) >= 12) {
+						world.setBlock(x, y, z, this, 2, 3);
+						if (B == ModBlocks.saltDirt) {
+							world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);
+						} else if (B == ModBlocks.saltDirtLite && M == 2) {
+							world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);
+						} else if (B == ModBlocks.saltDirtLite && M == 1) {
+							world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);
+						}
+					} else if ((world.getBlockMetadata(x, y, z) >= 2 || world.getBlockMetadata(x, y, z) <= 4) && world.getFullBlockLightValue(x, y, z) >= 12) {
+						if (world.getBlockMetadata(x, y, z) == 2 || world.getBlockMetadata(x, y, z) == 3) {
+							if (world.getBlockMetadata(x, y, z) == 2) {
+								world.setBlock(x, y, z, this, 3, 3);
+							} else if (world.getBlockMetadata(x, y, z) == 3) {
+								world.setBlock(x, y, z, this, 4, 3);
+							}
+							if (B == ModBlocks.saltDirt) {
+								world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);
+							} else if (B == ModBlocks.saltDirtLite && M == 2) {
+								world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);
+							} else if (B == ModBlocks.saltDirtLite && M == 1) {
+								world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);
 							}
 						}
-						
+						int S = 0;
+						for (int x1 = x - 2; x1 <= x + 2; x1++) {
+							for (int z1 = z - 2; z1 <= z + 2; z1++) {
+
+								if (world.getBlock(x1, y, z1) == ModBlocks.saltWort) {
+									S = S + 1;
+								}
+							}
 						}
+						if (S < 7) {
+							for (int x2 = x - 1; x2 <= x + 1; x2++) {
+								for (int z2 = z - 1; z2 <= z + 1; z2++) {
+
+									Block B2 = world.getBlock(x2, y - 1, z2);
+									int M2 = world.getBlockMetadata(x2, y - 1, z2);
+
+									if (rand.nextInt(8) == 0 && world.isAirBlock(x2, y, z2) &&
+											((B2 == ModBlocks.saltDirtLite && (M2 == 1 || M2 == 2)) || (B2 == ModBlocks.saltDirt && M2 == 0)) &&
+											((B == ModBlocks.saltDirtLite && (M == 1 || M == 2)) || (B == ModBlocks.saltDirt && M == 0))) {
+										world.setBlock(x2, y, z2, ModBlocks.saltWort);
+
+										if (B2 == ModBlocks.saltDirt) {
+											world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite, 2, 3);
+										} else if (B2 == ModBlocks.saltDirtLite && M2 == 2) {
+											world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite, 1, 3);
+										} else if (B2 == ModBlocks.saltDirtLite && M2 == 1) {
+											world.setBlock(x2, y - 1, z2, ModBlocks.saltDirtLite);
+										}
+
+										if (world.getBlockMetadata(x, y, z) == 4) {
+											if (B == ModBlocks.saltDirt) {
+												world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 2, 3);
+											} else if (B == ModBlocks.saltDirtLite && M == 2) {
+												world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite, 1, 3);
+											} else if (B == ModBlocks.saltDirtLite && M == 1) {
+												world.setBlock(x, y - 1, z, ModBlocks.saltDirtLite);
+											}
+										}
+									}
+
+								}
+							}
 						}
+					}
+				}
+			} else {
+				if (rand.nextInt(SaltConfig.saltWortGrowSpeed + 1) == 0) {
+					if (world.getBlockMetadata(x, y, z) == 0) {
+						world.setBlock(x, y, z, this, 1, 3);
+					} else if (world.getBlockMetadata(x, y, z) == 1) {
+						world.setBlock(x, y, z, this, 5, 3);
 					}
 				}
 			}
 		}
-		
-		else
-		{
-			if (rand.nextInt(CommonProxy.saltWortGrowSpeed + 1) == 0)
-			{
-				if (world.getBlockMetadata(x, y, z) == 0)
-				{world.setBlock(x, y, z, this, 1, 3);}
-				else if (world.getBlockMetadata(x, y, z) == 1)
-				{world.setBlock(x, y, z, this, 5, 3);}	
-			}
-		}
-		}
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz)
 	{

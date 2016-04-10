@@ -3,10 +3,10 @@ package ru.liahim.saltmod.block;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ColorizerGrass;
@@ -28,12 +28,14 @@ public class GrassTop extends Block {
 		return false;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int side, int meta)
 	{
-		return side > 1 ? Blocks.grass.getIconSideOverlay() : this.blockIcon;
+		return side > 1 ? BlockGrass.getIconSideOverlay() : this.blockIcon;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister icon)
 	{
@@ -42,12 +44,11 @@ public class GrassTop extends Block {
 	
 	@SideOnly(Side.CLIENT)
 	@Override
-	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side)
-	{
-		if (side > 0) return super.shouldSideBeRendered(access, x, y, z, side);
-		else return false;
+	public boolean shouldSideBeRendered(IBlockAccess access, int x, int y, int z, int side) {
+		return side > 0 && super.shouldSideBeRendered(access, x, y, z, side);
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBlockColor()
 	{
@@ -56,12 +57,14 @@ public class GrassTop extends Block {
 		return ColorizerGrass.getGrassColor(d0, d1);
 	}
     
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getRenderColor(int p_149741_1_)
 	{
 		return this.getBlockColor();
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int colorMultiplier(IBlockAccess world, int x, int y, int z)
 	{
@@ -83,11 +86,13 @@ public class GrassTop extends Block {
 		return (l / 9 & 255) << 16 | (i / 9 & 255) << 8 | j / 9 & 255;
 	}
     
+	@Override
 	public Item getItemDropped(int meta, Random random, int fortune)
 	{
 		return null;
 	}
 	
+	@Override
 	protected boolean canSilkHarvest()
 	{
 		return false;
