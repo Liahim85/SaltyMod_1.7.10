@@ -1,21 +1,17 @@
 package ru.liahim.saltmod.common;
 
-import java.io.File;
-
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidContainerRegistry;
@@ -24,11 +20,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import ru.liahim.saltmod.SaltMod;
 import ru.liahim.saltmod.api.ExtractRegistry;
-import ru.liahim.saltmod.client.ClientProxy;
-import ru.liahim.saltmod.extractor.ExtractorButtonMessage;
-import ru.liahim.saltmod.extractor.GuiExtractorHandler;
-import ru.liahim.saltmod.extractor.TileEntityExtractor;
-import ru.liahim.saltmod.item.SaltFood;
+import ru.liahim.saltmod.dispenser.DispenserBehaviorRainmaiker;
+import ru.liahim.saltmod.dispenser.DispenserBehaviorSaltPinch;
+import ru.liahim.saltmod.entity.EntityRainmaker;
+import ru.liahim.saltmod.entity.EntityRainmakerDust;
+import ru.liahim.saltmod.init.AchievSalt;
+import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.init.ModItems;
+import ru.liahim.saltmod.init.SaltConfig;
+import ru.liahim.saltmod.inventory.gui.GuiExtractorHandler;
+import ru.liahim.saltmod.network.ExtractorButtonMessage;
+import ru.liahim.saltmod.network.SaltModEvent;
+import ru.liahim.saltmod.network.SaltWortMessage;
+import ru.liahim.saltmod.tileentity.TileEntityExtractor;
 import ru.liahim.saltmod.world.SaltCrystalGenerator;
 import ru.liahim.saltmod.world.SaltLakeGenerator;
 import ru.liahim.saltmod.world.SaltOreGenerator;
@@ -38,98 +42,57 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class CommonProxy {
-	
+
 	public static CreativeTabs saltTab = new SaltTab("saltTab");
 
 	public static SaltOreGenerator saltOreGenerator = new SaltOreGenerator();
 	public static SaltCrystalGenerator saltCrystalGenerator = new SaltCrystalGenerator();
 	public static SaltLakeGenerator saltLakeGenerator = new SaltLakeGenerator();
-	
-	public static int saltOreFrequency;
-	public static int saltOreSize;
-	public static int saltLakeGroupRarity;
-	public static int saltLakeQuantity;
-	public static int saltLakeDistance;
-	public static int saltLakeRadius;
-	public static int saltCrystalGrowSpeed;
-	public static int saltWortGrowSpeed;
-	public static boolean mudArmorWaterDam;
-	public static int mudRegenSpeed;
-	public static int extractorVolume;
-	public static int TFDim;
-	public static boolean TFOreGen;
 
-//TF
-	public static Item saltVenisonCooked = new SaltFood("saltVenisonCooked", 9, 9.0F).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltVenisonCooked");
-	public static Item saltMeefSteak = new SaltFood("saltMeefSteak", 7, 7.0F).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltMeefSteak");
-	public static Item saltMeefStroganoff = new SaltFood("saltMeefStroganoff", 9, 1.0F, Items.bowl).setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltMeefStroganoff");
-	public static Item saltHydraChop = new SaltFood("saltHydraChop", 19, 20.0F).setPotionEffect(10, 5, 0, 1.0F).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltHydraChop");
-	public static Item pickledMushgloom = new SaltFood("pickledMushgloom", 4, 4.8F, Items.glass_bottle, new PotionEffect(Potion.nightVision.id, 1200, 0), new PotionEffect(Potion.moveSlowdown.id, 100, 0)).setAlwaysEdible().setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_PickledMushgloom");
-	public static Item saltWortVenison = new SaltFood("saltWortVenison", 10, 9.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltWortVenison");
-	public static Item saltWortMeefSteak = new SaltFood("saltWortMeefSteak", 8, 7.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(saltTab).setTextureName("saltmod:TF_SaltWortMeefSteak");
+	public static ArmorMaterial mudMaterial = EnumHelper.addArmorMaterial("mudMaterial", 4, new int[]{1, 1, 1, 1}, 15);
 
-	public static ArmorMaterial mudMaterial = EnumHelper.addArmorMaterial("mudMaterial", 4, new int[] {1, 1, 1, 1}, 15);
-
-//Milk
+	//Milk
 	@SideOnly(Side.CLIENT)
 	public static IIcon milkIcon;
 	public static Fluid milk;
-	
+
 	public static SimpleNetworkWrapper network;
-	
-	public void preInit(FMLPreInitializationEvent event)
-	{
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-		config.load();
-		saltOreFrequency = config.getInt("SaltOreFrequency", "World", 4, 1, 10, "Salt ore frequency");
-		saltOreSize = config.getInt("SaltOreSize", "World", 5, 1, 10, "Salt ore size");	
-		saltLakeGroupRarity = config.getInt("SaltLakeGroupRarity", "World", 500, 1, 1000, "Rarity of the salt lake groups");
-		saltLakeQuantity = config.getInt("SaltLakeQuantity", "World", 5, 1, 10, "The maximum quantity of the salt lakes in the salt lake groups");
-		saltLakeDistance = config.getInt("SaltLakeDistance", "World", 30, 10, 50, "The maximum distance between the salt lakes in the salt lake groups");
-		saltLakeRadius = config.getInt("SaltLakeRadius", "World", 20, 5, 50, "The maximum radius of the salt lake");
-		saltCrystalGrowSpeed = config.getInt("SaltCrystalGrowRate", "Farm", 14, 1, 20, "The salt crystals growth rate (1 - fastly, 20 - slowly)");
-		saltWortGrowSpeed = config.getInt("SaltWortGrowRate", "Farm", 7, 1, 20, "The saltwort growth rate (1 - fastly, 20 - slowly)");
-		extractorVolume = config.getInt("SaltExtractorVolume", "Extractor", 1, 1, 3, "The number of buckets in the salt extractor");
-		mudArmorWaterDam = config.getBoolean("MudArmorWaterDamage", "Armor", true, "Mud Armor water damage");
-		mudRegenSpeed = config.getInt("MudRegenSpeed", "Armor", 100, 10, 100, "Speed of Mud Armor & Block regeneration effect (10 - fastly, 100 - slowly)");
-		TFOreGen = config.getBoolean("TFOreGen", "TwilightForest", true, "Salt ore generation in the Twilight Forest dimention");
-		config.save();
-		
+
+	public void preInit(FMLPreInitializationEvent event) {
 		SaltModEvent sEvent = new SaltModEvent();
 		FMLCommonHandler.instance().bus().register(sEvent);
 		MinecraftForge.EVENT_BUS.register(sEvent);
-		
 		NetworkRegistry.INSTANCE.registerGuiHandler(SaltMod.instance, new GuiExtractorHandler());
-		network = NetworkRegistry.INSTANCE.newSimpleChannel("ExtractorChannel");
+		network = NetworkRegistry.INSTANCE.newSimpleChannel(SaltMod.MODID);
 		network.registerMessage(ExtractorButtonMessage.Handler.class, ExtractorButtonMessage.class, 0, Side.SERVER);
+		network.registerMessage(SaltWortMessage.Handler.class, SaltWortMessage.class, 1, Side.CLIENT);
 	}
-	
-	public void init(FMLInitializationEvent event)
-	{
-		ModItems.init();
-		ModBlocks.init();
+
+	public void init(FMLInitializationEvent event) {
+		
 		AchievSalt.init();
-
-		Configuration configTF = new Configuration(new File("./config", "TwilightForest.cfg"));
-		configTF.load();
-		TFDim = configTF.get("dimension", "dimensionID", 7).getInt();
-
-		ClientProxy.setCustomRenderers();
+		
+		ClientProxy.setBlockRenderers();
+		if (event.getSide().isClient()) {ClientProxy.setEntityRenderers();}
 
 		GameRegistry.registerTileEntity(TileEntityExtractor.class, "tileEntityExtractor");
-
+		EntityRegistry.registerModEntity(EntityRainmaker.class, "entityRainmaker", 0, SaltMod.instance, 64, 20, true);
+		EntityRegistry.registerModEntity(EntityRainmakerDust.class, "entityRainmakerDust", 1, SaltMod.instance, 64, 20, false);
+		BlockDispenser.dispenseBehaviorRegistry.putObject(ModItems.rainmaker, new DispenserBehaviorRainmaiker());
+		BlockDispenser.dispenseBehaviorRegistry.putObject(ModItems.saltPinch, new DispenserBehaviorSaltPinch());
+	    
 		GameRegistry.registerWorldGenerator(saltOreGenerator, 0);
 		GameRegistry.registerWorldGenerator(saltCrystalGenerator, 10);
 		GameRegistry.registerWorldGenerator(saltLakeGenerator, 15);
 
-//Recipe
+		//Recipe
 		ExtractRegistry.instance().addExtracting(FluidRegistry.WATER, ModItems.saltPinch, 1000, 0.0F);
-
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltPinch, 9), new ItemStack(ModItems.salt));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.salt, 9), new ItemStack(ModBlocks.saltBlock));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.salt, 9), new ItemStack(ModBlocks.saltBlock, 1, 1));
@@ -153,7 +116,7 @@ public class CommonProxy {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.mineralMud), new ItemStack(ModItems.soda), new ItemStack(ModItems.salt), new ItemStack(Items.coal), new ItemStack(Items.clay_ball));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.mineralMud), new ItemStack(ModItems.soda), new ItemStack(ModItems.salt), new ItemStack(Items.coal, 1, 1), new ItemStack(Items.clay_ball));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.mineralMud, 4), new ItemStack(ModBlocks.mudBlock));
-
+		
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltBeefCooked), new ItemStack(ModItems.saltPinch), new ItemStack(Items.cooked_beef));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltPorkchopCooked), new ItemStack(ModItems.saltPinch), new ItemStack(Items.cooked_porkchop));
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltPotatoBaked), new ItemStack(ModItems.saltPinch), new ItemStack(Items.baked_potato));
@@ -214,6 +177,9 @@ public class CommonProxy {
 		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.muffin), new ItemStack(ModItems.soda), new ItemStack(Items.egg), new ItemStack(Items.wheat), new ItemStack(Items.dye, 1, 3));
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.milk_bucket), new ItemStack(ModItems.powderedMilk), new ItemStack(Items.water_bucket), new ItemStack(Items.bucket));
 
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.saltStar), new ItemStack(Items.gunpowder), new ItemStack(ModItems.salt), new ItemStack(ModItems.salt), new ItemStack(ModItems.salt), new ItemStack(ModItems.salt), new ItemStack(ModItems.soda), new ItemStack(ModItems.soda), new ItemStack(ModItems.soda), new ItemStack(ModItems.soda));
+		GameRegistry.addShapelessRecipe(new ItemStack(ModItems.rainmaker), new ItemStack(ModItems.saltStar), new ItemStack(ModItems.saltStar), new ItemStack(ModItems.saltStar), new ItemStack(ModItems.saltStar), new ItemStack(ModItems.saltStar), new ItemStack(Items.paper), new ItemStack(Items.gunpowder), new ItemStack(Items.gunpowder), new ItemStack(Items.gunpowder));
+
 		GameRegistry.addRecipe(new ItemStack(ModItems.salt), "xxx", "xxx", "xxx", 'x', ModItems.saltPinch);
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltBlock), "xxx", "xxx", "xxx", 'x', ModItems.salt);
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltLamp), "x", "y", 'x', new ItemStack(ModBlocks.saltBlock, 1, 0), 'y', new ItemStack(Blocks.torch));
@@ -227,22 +193,21 @@ public class CommonProxy {
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltSlab, 6, 1), "xxx", 'x', new ItemStack(ModBlocks.saltBlock, 1, 5));
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.saltSlab, 6, 2), "xxx", 'x', new ItemStack(ModBlocks.saltBlock, 1, 2));
 		GameRegistry.addRecipe(new ItemStack(ModItems.cornedBeef), "xxx", "xyx", "xxx", 'x', ModItems.saltPinch, 'y', Items.rotten_flesh);
-
+		
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.mudBlock), "xx", "xx", 'x', ModItems.mineralMud);
 		GameRegistry.addRecipe(new ItemStack(ModItems.mudHelmet), "xxx", "x x", 'x', ModItems.mineralMud);
 		GameRegistry.addRecipe(new ItemStack(ModItems.mudChestplate), "x x", "xxx", "xxx", 'x', ModItems.mineralMud);
 		GameRegistry.addRecipe(new ItemStack(ModItems.mudLeggings), "xxx", "x x", "x x", 'x', ModItems.mineralMud);
 		GameRegistry.addRecipe(new ItemStack(ModItems.mudBoots), "x x", "x x", 'x', ModItems.mineralMud);
-
+		
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.extractor), "xyx", "x x", "xxx", 'x', Blocks.cobblestone, 'y', Items.cauldron);
-
+		
 		GameRegistry.addSmelting(ModBlocks.saltOre, new ItemStack(ModItems.salt, 1), 0.7F);
 		GameRegistry.addSmelting(ModBlocks.saltLake, new ItemStack(ModItems.salt, 1), 0.7F);
 		GameRegistry.addSmelting(new ItemStack(ModBlocks.saltBlock, 1, 0), new ItemStack(ModBlocks.saltBlock, 1, 6), 0.0F);
 		GameRegistry.addSmelting(new ItemStack(ModBlocks.saltBlock, 1, 5), new ItemStack(ModBlocks.saltBlock, 1, 7), 0.0F);
 		GameRegistry.addSmelting(ModItems.saltWortSeed, new ItemStack(ModItems.soda, 1), 0.0F);
-
-//Chest Content
+		//Chest Content
 		ChestGenHooks.addItem(ChestGenHooks.BONUS_CHEST, new WeightedRandomChestContent(new ItemStack(ModItems.salt), 2, 5, 5));
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(ModItems.salt), 2, 5, 5));
 		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(ModItems.saltWortSeed), 2, 3, 3));
@@ -252,8 +217,7 @@ public class CommonProxy {
 		ChestGenHooks.addItem(ChestGenHooks.VILLAGE_BLACKSMITH, new WeightedRandomChestContent(new ItemStack(ModItems.salt), 2, 5, 10));
 		ChestGenHooks.addItem(ChestGenHooks.PYRAMID_DESERT_CHEST, new WeightedRandomChestContent(new ItemStack(ModItems.saltWortSeed), 2, 3, 3));
 		ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, new WeightedRandomChestContent(new ItemStack(ModItems.saltWortSeed), 2, 5, 5));
-
-//OreDictionary
+		//OreDictionary
 		OreDictionary.registerOre("oreSalt", ModBlocks.saltOre);
 		OreDictionary.registerOre("blockSalt", ModBlocks.saltBlock);
 		OreDictionary.registerOre("blockSaltCrystal", ModBlocks.saltCrystal);
@@ -264,53 +228,47 @@ public class CommonProxy {
 		OreDictionary.registerOre("cropSaltwort", ModItems.saltWortSeed);
 		OreDictionary.registerOre("materialMineralMud", ModItems.mineralMud);
 	}
-	
-	public void postInit(FMLPostInitializationEvent event)
-	{
-//TF Items & Recipe
-    	Item venisonCooked = GameRegistry.findItem("TwilightForest", "item.venisonCooked");
-    	if (venisonCooked != null){
-		GameRegistry.registerItem(saltVenisonCooked, "saltVenisonCooked");
-		GameRegistry.registerItem(saltWortVenison, "saltWortVenison");
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltVenisonCooked),
-		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(venisonCooked)});
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltWortVenison),
-    		new Object[] {new ItemStack(venisonCooked), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl)});}
-	Item meefSteak = GameRegistry.findItem("TwilightForest", "item.meefSteak");
-    	if (meefSteak != null){
-    		GameRegistry.registerItem(saltMeefSteak, "saltMeefSteak");
-    		GameRegistry.registerItem(saltWortMeefSteak, "saltWortMeefSteak");
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltMeefSteak),
-		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefSteak)});
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltWortVenison),
-		new Object[] {new ItemStack(meefSteak), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl)});}
-	Item meefStroganoff = GameRegistry.findItem("TwilightForest", "item.meefStroganoff");
-    	if (meefStroganoff != null){
-    		GameRegistry.registerItem(saltMeefStroganoff, "saltMeefStroganoff");
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltMeefStroganoff),
-		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(meefStroganoff)});}
-	Item hydraChop = GameRegistry.findItem("TwilightForest", "item.hydraChop");
-    	if (hydraChop != null){
-    		GameRegistry.registerItem(saltHydraChop, "saltHydraChop");
-    		GameRegistry.addShapelessRecipe(new ItemStack(saltHydraChop),
-		new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(hydraChop)});}
-	Block mushgloom = GameRegistry.findBlock("TwilightForest", "tile.TFPlant");
-    	if (mushgloom != null){
-    		GameRegistry.registerItem(pickledMushgloom, "pickledMushgloom");
-    		GameRegistry.addShapelessRecipe(new ItemStack(pickledMushgloom),
-    	    new Object[] {new ItemStack(ModItems.saltPinch), new ItemStack(Items.potionitem), new ItemStack(mushgloom, 1, 9), new ItemStack(mushgloom, 1, 9)});}
-//Milk Registry
-    	if (FluidRegistry.isFluidRegistered("milk"))
-    	{
-    		Fluid milk = FluidRegistry.getFluid("milk");
-    		ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
-    	}
-    	else
-    	{
-    		milk = new Fluid("milk");
-    		FluidRegistry.registerFluid(milk);
-    		FluidContainerRegistry.registerFluidContainer(new FluidStack(milk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), FluidContainerRegistry.EMPTY_BUCKET);
-    		ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
-    	}
-    }
+
+	public void postInit(FMLPostInitializationEvent event) {
+		//TF Items & Recipe
+		Item venisonCooked = GameRegistry.findItem("TwilightForest", "item.venisonCooked");
+		if (venisonCooked != null) {
+			GameRegistry.registerItem(SaltConfig.saltVenisonCooked, "saltVenisonCooked");
+			GameRegistry.registerItem(SaltConfig.saltWortVenison, "saltWortVenison");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltVenisonCooked), new ItemStack(ModItems.saltPinch), new ItemStack(venisonCooked));
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltWortVenison), new ItemStack(venisonCooked), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl));
+		}
+		Item meefSteak = GameRegistry.findItem("TwilightForest", "item.meefSteak");
+		if (meefSteak != null) {
+			GameRegistry.registerItem(SaltConfig.saltMeefSteak, "saltMeefSteak");
+			GameRegistry.registerItem(SaltConfig.saltWortMeefSteak, "saltWortMeefSteak");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltMeefSteak), new ItemStack(ModItems.saltPinch), new ItemStack(meefSteak));
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltWortVenison), new ItemStack(meefSteak), new ItemStack(ModItems.saltWortSeed), new ItemStack(ModItems.saltWortSeed), new ItemStack(Items.bowl));
+		}
+		Item meefStroganoff = GameRegistry.findItem("TwilightForest", "item.meefStroganoff");
+		if (meefStroganoff != null) {
+			GameRegistry.registerItem(SaltConfig.saltMeefStroganoff, "saltMeefStroganoff");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltMeefStroganoff), new ItemStack(ModItems.saltPinch), new ItemStack(meefStroganoff));
+		}
+		Item hydraChop = GameRegistry.findItem("TwilightForest", "item.hydraChop");
+		if (hydraChop != null) {
+			GameRegistry.registerItem(SaltConfig.saltHydraChop, "saltHydraChop");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.saltHydraChop), new ItemStack(ModItems.saltPinch), new ItemStack(hydraChop));
+		}
+		Block mushgloom = GameRegistry.findBlock("TwilightForest", "tile.TFPlant");
+		if (mushgloom != null) {
+			GameRegistry.registerItem(SaltConfig.pickledMushgloom, "pickledMushgloom");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.pickledMushgloom), new ItemStack(ModItems.saltPinch), new ItemStack(Items.potionitem), new ItemStack(mushgloom, 1, 9), new ItemStack(mushgloom, 1, 9));
+		}
+		//Milk Registry
+		if (FluidRegistry.isFluidRegistered("milk")) {
+			Fluid milk = FluidRegistry.getFluid("milk");
+			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
+		} else {
+			milk = new Fluid("milk");
+			FluidRegistry.registerFluid(milk);
+			FluidContainerRegistry.registerFluidContainer(new FluidStack(milk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), FluidContainerRegistry.EMPTY_BUCKET);
+			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
+		}
+	}
 }
