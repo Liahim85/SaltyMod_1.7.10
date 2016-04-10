@@ -5,6 +5,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
+import net.minecraft.block.IGrowable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,9 +20,9 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import ru.liahim.saltmod.common.CommonProxy;
-import ru.liahim.saltmod.common.ModBlocks;
-import ru.liahim.saltmod.common.ModItems;
+import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.init.ModItems;
+import ru.liahim.saltmod.init.SaltConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -232,110 +233,114 @@ public class SaltWort extends BlockBush {
 		}
 	}
 	
+	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz)
-    {
-		boolean D = (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == Items.dye && player.getCurrentEquippedItem().getItemDamage() == 15);
+	{
 		ItemStack current = player.getCurrentEquippedItem();
-
-		if (!world.isRemote)
+		
+		if (!world.isRemote && world.getBlockMetadata(x, y, z) == 4 && player.getCurrentEquippedItem() != null &&
+				player.getCurrentEquippedItem().getItem() == Items.shears)
 		{
-			if (D)
+			world.setBlock(x, y, z, ModBlocks.saltWort, 2, 3);
+			Random rand = new Random();
+			int i = rand.nextInt(3) + 1;
+			int fort = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, player.getCurrentEquippedItem());
+			if (fort > 0) {
+				i = rand.nextInt(5 - fort) + fort;
+			}
+			ItemStack item = new ItemStack(ModItems.saltWortSeed, i, 0);
+			EntityItem entity_item = new EntityItem(world, x + 0.5D, y + 0.5D, z + 0.5D, item);
+			entity_item.delayBeforeCanPickup = 10;
+			world.spawnEntityInWorld(entity_item);
+			world.playSoundEffect(x + 0.5D, y + 1.0D, z + 0.5D, "mob.sheep.shear", 1.0F, 1.2F);
+			ItemStack shear = player.getCurrentEquippedItem();
+			if (!player.capabilities.isCreativeMode)
 			{
-				boolean chek = false;
-				
-				for (int x3 = x-1; x3 <= x+1; x3++) {
-				for (int z3 = z-1; z3 <= z+1; z3++) {
+				shear.damageItem(1, player);
 					
-				Block B3 = world.getBlock(x3, y - 1, z3);
-				int M3 = world.getBlockMetadata(x3, y - 1, z3);
-
-				if (world.getBlock(x3, y, z3) == ModBlocks.saltWort && world.getBlockMetadata(x3, y, z3) < 4)
-				{
-					if ((B3 == ModBlocks.saltDirt && M3 == 0) ||
-						(B3 == ModBlocks.saltDirtLite && (M3 == 1 || M3 == 2)))
-					{
-						if (world.getBlockMetadata(x3, y, z3) == 0)
-						{world.setBlock(x3, y, z3, this, 1, 3);chek = true;}
-						
-						else
-						{
-							if (world.getBlockMetadata(x3, y, z3) == 1)
-							{world.setBlock(x3, y, z3, this, 2, 3);chek = true;}
-							else if (world.getBlockMetadata(x3, y, z3) == 2)
-							{world.setBlock(x3, y, z3, this, 3, 3);chek = true;}
-							else if (world.getBlockMetadata(x3, y, z3) == 3)
-							{world.setBlock(x3, y, z3, this, 4, 3);chek = true;}
-						
-							if (world.getBlockMetadata(x3, y, z3) < 5)
-							{
-								if (B3 == ModBlocks.saltDirt)
-								{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite, 2, 3);}
-								else if (B3 == ModBlocks.saltDirtLite && M3 == 2)
-								{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite, 1, 3);}
-								else if (B3 == ModBlocks.saltDirtLite && M3 == 1)
-								{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite);}
-						}
-					}
-					}
-			
-					else if (world.getBlockMetadata(x3, y, z3) == 0)
-					{world.setBlock(x3, y, z3, this, 1, 3);chek = true;}
-    			
-				}
-				}
-				}
-				
-				if (chek)
-				{
-			        if (!player.capabilities.isCreativeMode)
-			        {
-			            --current.stackSize;
-			        }
-					chek = false;
-					return true;
-				}
-    		}
-			
-			else if (world.getBlockMetadata(x, y, z) == 4 && player.getCurrentEquippedItem() != null &&
-					 player.getCurrentEquippedItem().getItem() == Items.shears)
-			{
-				world.setBlock(x, y, z, ModBlocks.saltWort, 2, 3);
-			
-				Random rand = new Random();
-				int i = rand.nextInt(3) + 1;				
-				int fort = EnchantmentHelper.getEnchantmentLevel(Enchantment.fortune.effectId, player.getCurrentEquippedItem());
-				if (fort > 0)
-				{
-					i = rand.nextInt(5 - fort) + fort;
-				}
-				
-				ItemStack item = new ItemStack(ModItems.saltWortSeed, i, 0);
-				EntityItem entity_item = new EntityItem(world, (double)x + 0.5D, (double)y + 0.5D, (double)z + 0.5D, item);
-				entity_item.delayBeforeCanPickup = 10;
-				world.spawnEntityInWorld(entity_item);
-				world.playSoundEffect((double)x + 0.5D, (double)y + 1.0D, (double)z + 0.5D, "mob.sheep.shear", 1.0F, 1.2F);
-								
-				ItemStack shear = player.getCurrentEquippedItem();
-				if (!player.capabilities.isCreativeMode)
-		        {
-					shear.damageItem(1, player);
-		            if (shear.getItemDamage() > shear.getMaxDamage()){--shear.stackSize;}
-		        }
-				
-				return true;
+				if (shear.getItemDamage() > shear.getMaxDamage())
+				{--shear.stackSize;}
 			}
 		}
+		
+		return false;
+	}
+	
+	public static boolean fertilize(World world, int x, int y, int z)
+	{
+		boolean chek = false;
+		for (int x3 = x - 1; x3 <= x + 1; x3++) {
+		for (int z3 = z - 1; z3 <= z + 1; z3++) {
 
-        return false;
-    }
-	
-    public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face)
-    {
-        return 30;
-    }
-	
-	protected boolean canSilkHarvest()
+			Block B3 = world.getBlock(x3, y - 1, z3);
+			int M3 = world.getBlockMetadata(x3, y - 1, z3);
+			boolean P = false;
+
+			if (world.getBlock(x3, y, z3) == ModBlocks.saltWort && world.getBlockMetadata(x3, y, z3) < 4)
+			{
+				if ((B3 == ModBlocks.saltDirt && M3 == 0) ||
+					(B3 == ModBlocks.saltDirtLite && (M3 == 1 || M3 == 2)))
+				{
+					if (world.getBlockMetadata(x3, y, z3) == 0)
+					{world.setBlock(x3, y, z3, ModBlocks.saltWort, 1, 3); chek = true; P = true;}
+
+					else
+					{
+						if (world.getBlockMetadata(x3, y, z3) == 1)
+						{world.setBlock(x3, y, z3, ModBlocks.saltWort, 2, 3); chek = true; P = true;}
+						else if (world.getBlockMetadata(x3, y, z3) == 2)
+						{world.setBlock(x3, y, z3, ModBlocks.saltWort, 3, 3); chek = true; P = true;}
+						else if (world.getBlockMetadata(x3, y, z3) == 3)
+						{world.setBlock(x3, y, z3, ModBlocks.saltWort, 4, 3); chek = true; P = true;}
+
+						if (world.getBlockMetadata(x3, y, z3) < 5)
+						{
+							if (B3 == ModBlocks.saltDirt)
+							{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite, 2, 3);}
+							else if (B3 == ModBlocks.saltDirtLite && M3 == 2)
+							{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite, 1, 3);}
+							else if (B3 == ModBlocks.saltDirtLite && M3 == 1)
+							{world.setBlock(x3, y - 1, z3, ModBlocks.saltDirtLite);}
+						}
+					}
+				}
+
+				else if (world.getBlockMetadata(x3, y, z3) == 0)
+				{world.setBlock(x3, y, z3, ModBlocks.saltWort, 1, 3); chek = true; P = true;}
+			}
+
+			if (P)
+			{P = false; if (!world.isRemote) world.playAuxSFX(2005, x3, y, z3, 0);}
+		}
+		}
+
+		if (chek) {chek = false; return true;}
+
+		return false;
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess world, int x, int y, int z, ForgeDirection face) {
+		return 30;
+	}
+
+	@Override
+	protected boolean canSilkHarvest() {
+		return false;
+	}
+
+	@Override
+	public boolean func_149851_a(World world, int x, int y, int z, boolean isClient)
+	{
+		return fertilize(world, x, y, z);
+	}
+
+	@Override
+	public boolean func_149852_a(World world, Random rand, int x, int y, int z)
 	{
 		return false;
 	}
+
+	@Override
+	public void func_149853_b(World world, Random rand, int x, int y, int z) {}
 }
