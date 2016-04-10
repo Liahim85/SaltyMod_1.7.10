@@ -14,20 +14,20 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import ru.liahim.saltmod.common.ModItems;
+import ru.liahim.saltmod.init.ModItems;
 
 public class SaltFood extends ItemFood {
-	
+
 	private Item container;
 	private PotionEffect[] effects;
-	
+
 	public SaltFood(String name, int amount, float saturation, Item container, PotionEffect... potionEffect) {
 		super(amount, saturation, false);
 		this.setUnlocalizedName(name);
 		this.container = container;
 		this.effects = potionEffect;
 	}
-	
+
 	public SaltFood(String name, int amount, float saturation, PotionEffect... potionEffect) {
 		super(amount, saturation, false);
 		this.setUnlocalizedName(name);
@@ -41,68 +41,57 @@ public class SaltFood extends ItemFood {
 		this.container = null;
 		this.effects = null;
 	}
-	
+
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer player, List list, boolean flag) {
 
 		super.addInformation(is, player, list, flag);
 
-		if (this.effects != null)
-    	{
-			for (int i = 0; i < effects.length; i ++)
-			{	 
+		if (this.effects != null) {
+			for (PotionEffect effect : effects) {
 				String mess = "";
-        	
-				if (effects[i] != null && effects[i].getPotionID() > 0)
-				{
-					mess += (Potion.potionTypes[effects[i].getPotionID()].isBadEffect() ? EnumChatFormatting.RED : EnumChatFormatting.GRAY);
-					mess += StatCollector.translateToLocal(effects[i].getEffectName()).trim();
-
-					if (effects[i].getAmplifier() == 1){mess += " II";}
-					else if (effects[i].getAmplifier() == 2){mess += " III";}
-					else if (effects[i].getAmplifier() == 3){mess += " IV";}
-					else if (effects[i].getAmplifier() == 4){mess += " V";}
-
-        			if (effects[i].getDuration() > 20)
-        				mess += " (" + Potion.getDurationString(effects[i]) + ")";
-	    
-        			mess += EnumChatFormatting.RESET;
-
-        			list.add(mess);
-        		}
-        	}
-    	}
+				if (effect != null && effect.getPotionID() > 0) {
+					mess += (Potion.potionTypes[effect.getPotionID()].isBadEffect() ? EnumChatFormatting.RED : EnumChatFormatting.GRAY);
+					mess += StatCollector.translateToLocal(effect.getEffectName()).trim();
+					if (effect.getAmplifier() == 1) {
+						mess += " II";
+					} else if (effect.getAmplifier() == 2) {
+						mess += " III";
+					} else if (effect.getAmplifier() == 3) {
+						mess += " IV";
+					} else if (effect.getAmplifier() == 4) {
+						mess += " V";
+					}
+					if (effect.getDuration() > 20)
+						mess += " (" + Potion.getDurationString(effect) + ")";
+					mess += EnumChatFormatting.RESET;
+					list.add(mess);
+				}
+			}
+		}
 	}
-	
-    public EnumAction getItemUseAction(ItemStack item)
-    {
-    	if (getUnlocalizedName().equals(ModItems.fermentedSaltWort.getUnlocalizedName()))
-    	{
-    		return EnumAction.drink;
-    	}
-    		
-        return EnumAction.eat;
-    }
 
 	@Override
-    public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
-    {
-        super.onEaten(stack, world, player);
-        
-        if (this.effects != null)
-    	{
-        	for (int i = 0; i < effects.length; i ++)
-        	{
-        		if (!world.isRemote && effects[i] != null && effects[i].getPotionID() > 0)
-        			player.addPotionEffect(new PotionEffect(this.effects[i]));
-        	}
-    	}
-        
-        if (!world.isRemote && getUnlocalizedName().equals(ModItems.saltEgg.getUnlocalizedName()))
-        {
-        	world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(Items.dye, 1, 15)));
-        }
-        
-        return this.container != null ? new ItemStack(this.container) : stack;
-    }
+	public EnumAction getItemUseAction(ItemStack item) {
+		if (getUnlocalizedName().equals(ModItems.fermentedSaltWort.getUnlocalizedName())) {
+			return EnumAction.drink;
+		}
+
+		return EnumAction.eat;
+	}
+
+	@Override
+	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+		super.onEaten(stack, world, player);
+		if (this.effects != null) {
+			for (PotionEffect effect : effects) {
+				if (!world.isRemote && effect != null && effect.getPotionID() > 0)
+					player.addPotionEffect(new PotionEffect(effect));
+			}
+		}
+		if (!world.isRemote && getUnlocalizedName().equals(ModItems.saltEgg.getUnlocalizedName())) {
+			world.spawnEntityInWorld(new EntityItem(world, player.posX, player.posY, player.posZ, new ItemStack(Items.dye, 1, 15)));
+		}
+		return this.container != null ? new ItemStack(this.container) : stack;
+	}
 }
