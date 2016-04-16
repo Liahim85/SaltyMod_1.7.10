@@ -7,11 +7,13 @@ import java.util.regex.Pattern;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.common.config.Configuration;
 import ru.liahim.saltmod.SaltMod;
 import ru.liahim.saltmod.common.CommonProxy;
+import ru.liahim.saltmod.item.MainItems;
 import ru.liahim.saltmod.item.SaltFood;
 
 public class SaltConfig extends Configuration {
@@ -37,10 +39,18 @@ public class SaltConfig extends Configuration {
     public static Item saltVenisonCooked = new SaltFood("saltVenisonCooked", 9, 9.0F).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltVenisonCooked");
     public static Item saltMeefSteak = new SaltFood("saltMeefSteak", 7, 7.0F).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltMeefSteak");
     public static Item saltMeefStroganoff = new SaltFood("saltMeefStroganoff", 9, 1.0F, Items.bowl).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltMeefStroganoff");
-    public static Item saltHydraChop = new SaltFood("saltHydraChop", 19, 20.0F).setPotionEffect(10, 5, 0, 1.0F).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltHydraChop");
+    public static Item saltHydraChop = new SaltFood("saltHydraChop", 19, 20.0F).setPotionEffect(Potion.regeneration.id, 5, 0, 1.0F).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltHydraChop");
     public static Item pickledMushgloom = new SaltFood("pickledMushgloom", 4, 4.8F, Items.glass_bottle, new PotionEffect(Potion.nightVision.id, 1200, 0), new PotionEffect(Potion.moveSlowdown.id, 100, 0)).setAlwaysEdible().setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_PickledMushgloom");
     public static Item saltWortVenison = new SaltFood("saltWortVenison", 10, 9.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltWortVenison");
     public static Item saltWortMeefSteak = new SaltFood("saltWortMeefSteak", 8, 7.2F, Items.bowl, new PotionEffect(Potion.regeneration.id, 100, 0)).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:TF_SaltWortMeefSteak");
+
+    //BOP
+    public static Item bop_poison = new MainItems("bop_poison", CommonProxy.saltTab, "BOP_Poison");
+    public static Item bop_saltSaladVeggie = ((ItemFood) new SaltFood("bop_saltSaladVeggie", 7, 1.6F, Items.bowl).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab)).setPotionEffect(Potion.nightVision.id, 60, 1, 0.1F).setTextureName("saltmod:BOP_SaltSaladVeggie");
+    public static Item bop_saltSaladShroom = ((ItemFood) new SaltFood("bop_saltSaladShroom", 7, 1.6F, Items.bowl).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab)).setPotionEffect(Potion.jump.id, 30, 1, 0.1F).setTextureName("saltmod:BOP_SaltSaladShroom");
+    public static Item bop_saltRiceBowl = new SaltFood("bop_saltRiceBowl", 3, 1.6F, Items.bowl).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:BOP_SaltRiceBowl");
+    public static Item bop_saltShroomPowder = ((ItemFood) new SaltFood("bop_saltShroomPowder", 2, 1.1F).setAlwaysEdible().setCreativeTab(CommonProxy.saltTab)).setPotionEffect(Potion.confusion.id, 15, 0, 0.3F).setTextureName("saltmod:BOP_SaltShroomPowder");
+    public static Item bop_pickledTurnip = new SaltFood("bop_pickledTurnip", 7, 1.8F, Items.glass_bottle).setMaxStackSize(1).setCreativeTab(CommonProxy.saltTab).setTextureName("saltmod:BOP_PickledTurnip");
 
     private File file;
 
