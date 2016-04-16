@@ -68,10 +68,10 @@ public class TileEntityExtractor extends TileEntity implements ISidedInventory, 
 
         	if (liquid)
         	{
-        		Fluid blockFluid;
-        		if (blockUp.getMaterial() == Material.water) {blockFluid = FluidRegistry.WATER;}
-        		else if (blockUp.getMaterial() == Material.lava) {blockFluid = FluidRegistry.LAVA;}
-        		else {blockFluid = FluidRegistry.lookupFluidForBlock(blockUp);}
+				Fluid blockFluid = null;
+				if (FluidRegistry.lookupFluidForBlock(blockUp) != null) {blockFluid = FluidRegistry.lookupFluidForBlock(blockUp);}
+				else if (blockUp.getMaterial() == Material.water) {blockFluid = FluidRegistry.WATER;}
+				else if (blockUp.getMaterial() == Material.lava) {blockFluid = FluidRegistry.LAVA;}
         		
         		if (blockFluid != null && !blockFluid.isGaseous() &&
         				this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord) == 0)
