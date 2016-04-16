@@ -229,8 +229,32 @@ public class CommonProxy {
 		OreDictionary.registerOre("materialMineralMud", ModItems.mineralMud);
 	}
 
-	public void postInit(FMLPostInitializationEvent event) {
-		//TF Items & Recipe
+	public void postInit(FMLPostInitializationEvent event)
+	{
+	//Milk Registry
+		if (FluidRegistry.isFluidRegistered("milk")) {
+			Fluid milk = FluidRegistry.getFluid("milk");
+			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
+		} else {
+			milk = new Fluid("milk");
+			FluidRegistry.registerFluid(milk);
+			FluidContainerRegistry.registerFluidContainer(new FluidStack(milk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), FluidContainerRegistry.EMPTY_BUCKET);
+			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
+		}
+	//Blood
+    	if (FluidRegistry.isFluidRegistered("blood"))
+    	{
+    		Fluid blood = FluidRegistry.getFluid("blood");
+    		GameRegistry.registerItem(ModItems.hemoglobin, "hemoglobin");
+    		ExtractRegistry.instance().addExtracting(blood, ModItems.hemoglobin, 1000, 1.0F);
+    	}
+    	if (FluidRegistry.isFluidRegistered("hell_blood"))
+    	{
+    		Fluid blood = FluidRegistry.getFluid("hell_blood");
+    		GameRegistry.registerItem(ModItems.hemoglobin, "hemoglobin");
+    		ExtractRegistry.instance().addExtracting(blood, ModItems.hemoglobin, 1000, 1.0F);
+    	}
+	//TF Items & Recipe
 		Item venisonCooked = GameRegistry.findItem("TwilightForest", "item.venisonCooked");
 		if (venisonCooked != null) {
 			GameRegistry.registerItem(SaltConfig.saltVenisonCooked, "saltVenisonCooked");
@@ -260,15 +284,40 @@ public class CommonProxy {
 			GameRegistry.registerItem(SaltConfig.pickledMushgloom, "pickledMushgloom");
 			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.pickledMushgloom), new ItemStack(ModItems.saltPinch), new ItemStack(Items.potionitem), new ItemStack(mushgloom, 1, 9), new ItemStack(mushgloom, 1, 9));
 		}
-		//Milk Registry
-		if (FluidRegistry.isFluidRegistered("milk")) {
-			Fluid milk = FluidRegistry.getFluid("milk");
-			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
-		} else {
-			milk = new Fluid("milk");
-			FluidRegistry.registerFluid(milk);
-			FluidContainerRegistry.registerFluidContainer(new FluidStack(milk, FluidContainerRegistry.BUCKET_VOLUME), new ItemStack(Items.milk_bucket), FluidContainerRegistry.EMPTY_BUCKET);
-			ExtractRegistry.instance().addExtracting(milk, ModItems.powderedMilk, 1000, 0.0F);
+	//BOP
+    	Item food = GameRegistry.findItem("BiomesOPlenty", "food");
+    	ItemStack saladveggie = new ItemStack(food, 1, 5);
+    	ItemStack saladshroom = new ItemStack(food, 1, 6);
+    	ItemStack turnip = new ItemStack(food, 1, 11);
+    	ItemStack ricebowl = new ItemStack(food, 1, 13);
+    	ItemStack shroompowder = new ItemStack(food, 1, 1);
+    	if (saladveggie.getItem() != null) {
+    		GameRegistry.registerItem(SaltConfig.bop_saltSaladVeggie, "bop_saltSaladVeggie");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.bop_saltSaladVeggie), saladveggie, new ItemStack(ModItems.saltPinch));
+		}
+    	if (saladshroom.getItem() != null) {
+    		GameRegistry.registerItem(SaltConfig.bop_saltSaladShroom, "bop_saltSaladShroom");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.bop_saltSaladShroom), saladshroom, new ItemStack(ModItems.saltPinch));
+		}
+    	if (ricebowl.getItem() != null) {
+    		GameRegistry.registerItem(SaltConfig.bop_saltRiceBowl, "bop_saltRiceBowl");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.bop_saltRiceBowl), ricebowl, new ItemStack(ModItems.saltPinch));
+		}
+    	if (turnip.getItem() != null) {
+    		GameRegistry.registerItem(SaltConfig.bop_pickledTurnip, "bop_pickledTurnip");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.bop_pickledTurnip), turnip, turnip, new ItemStack(Items.potionitem), new ItemStack(ModItems.saltPinch));
+		}
+    	if (shroompowder.getItem() != null) {
+    		GameRegistry.registerItem(SaltConfig.bop_saltShroomPowder, "bop_saltShroomPowder");
+			GameRegistry.addShapelessRecipe(new ItemStack(SaltConfig.bop_saltShroomPowder), shroompowder, new ItemStack(ModItems.saltPinch));
+		}
+    	Item bop_dart = GameRegistry.findItem("BiomesOPlenty", "dart");
+        ItemStack bop_poisondart = new ItemStack(bop_dart, 1, 1);
+		if (bop_dart != null && FluidRegistry.isFluidRegistered("poison")) {
+			Fluid poisonFl = FluidRegistry.getFluid("poison");
+    		GameRegistry.registerItem(SaltConfig.bop_poison, "bop_poison");
+			ExtractRegistry.instance().addExtracting(poisonFl, SaltConfig.bop_poison, 1000, 1.0F);
+			GameRegistry.addShapelessRecipe(bop_poisondart, new ItemStack(bop_dart), SaltConfig.bop_poison);
 		}
 	}
 }
