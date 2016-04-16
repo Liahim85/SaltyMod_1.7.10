@@ -39,6 +39,7 @@ item.powderedMilk.tooltip=Mixed with Water Bucket & Bucket
 item.saltStar.name=Salt Star
 item.rainmaker.name=Rainmaker
 item.rainmaker.tooltip=Should explode above the clouds
+item.hemoglobin.name=Hemoglobin
 
 item.saltBeefCooked.name=Salty Steak
 item.saltPorkchopCooked.name=Salty Cooked Porkchop
@@ -105,6 +106,13 @@ item.saltHydraChop.name=Salty Hydra Chop
 item.pickledMushgloom.name=Pickled Mushgloom
 item.saltWortVenison.name=Venison Steak With Saltwort
 item.saltWortMeefSteak.name=Meef Steak With Saltwort
+
+item.bop_poison.name=Poison
+item.bop_saltSaladVeggie.name=Salty Veggie Salad
+item.bop_saltSaladShroom.name=Salty Shroom Salad
+item.bop_saltRiceBowl.name=Salty Bowl of Rice
+item.bop_pickledTurnip.name=Pickled Turnip
+item.bop_saltShroomPowder.name=Salty Shroom Powder
 
 achievement.salt=Salt!
 achievement.salt.desc=Get salt

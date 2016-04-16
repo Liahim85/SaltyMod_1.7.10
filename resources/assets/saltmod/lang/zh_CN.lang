@@ -40,6 +40,7 @@ item.powderedMilk.tooltip=与水桶或桶混合
 item.saltStar.name=烟火之盐星
 item.rainmaker.name=人工降雨器
 item.rainmaker.tooltip=需要在云层之上引爆
+item.hemoglobin.name=血红蛋白
 
 item.saltBeefCooked.name=咸熟牛排
 item.saltPorkchopCooked.name=咸熟猪排
@@ -106,6 +107,13 @@ item.saltHydraChop.name=咸九头蛇肉排
 item.pickledMushgloom.name=腌制暮色森林蘑菇
 item.saltWortVenison.name=咸麦芽煨鹿肉排
 item.saltWortMeefSteak.name=咸麦芽煨牛头人肉排
+
+item.bop_poison.name=毒药
+item.bop_saltSaladVeggie.name=咸素食沙拉
+item.bop_saltSaladShroom.name=咸蘑菇沙拉
+item.bop_saltRiceBowl.name=咸一碗饭
+item.bop_pickledTurnip.name=腌芜菁
+item.bop_saltShroomPowder.name=咸蘑菇粉
 
 achievement.salt=盐！
 achievement.salt.desc=得到盐！

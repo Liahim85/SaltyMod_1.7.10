@@ -39,6 +39,7 @@ item.powderedMilk.tooltip=Misturado com Balde de Água & Balde
 item.saltStar.name=Estrela de Sal
 item.rainmaker.name=Criador de Chuva
 item.rainmaker.tooltip=Deve explodir acima das nuvens
+item.hemoglobin.name=Hemoglobina
 
 item.saltBeefCooked.name=Bife Salgado
 item.saltPorkchopCooked.name=Costeleta de Porco Assada Salgada
@@ -105,6 +106,13 @@ item.saltHydraChop.name=Costeleta de Hidra Salgada
 item.pickledMushgloom.name=Cogumelo das Trevas em Salmoura
 item.saltWortVenison.name=Filé de Veado com Soda
 item.saltWortMeefSteak.name=Mife com Soda
+
+item.bop_poison.name=Veneno
+item.bop_saltSaladVeggie.name=Salada Vegan Salgado
+item.bop_saltSaladShroom.name=Salada de Cogumelos Salgado
+item.bop_saltRiceBowl.name=Tigela de Arroz Salgado
+item.bop_pickledTurnip.name=Nabo em Salmoura
+item.bop_saltShroomPowder.name=Pó de Cogumelo Salgado
 
 achievement.salt=Sal!
 achievement.salt.desc=Apanha Sal

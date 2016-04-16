@@ -39,6 +39,7 @@ item.powderedMilk.tooltip=Смешать с ведром воды и пусты�
 item.saltStar.name=Звёздочка с солью
 item.rainmaker.name=Призывающий дождь
 item.rainmaker.tooltip=Должен взорваться над облаками
+item.hemoglobin.name=Гемоглобин
 
 item.saltBeefCooked.name=Стейк с солью
 item.saltPorkchopCooked.name=Жареная свинина с солью
@@ -105,6 +106,13 @@ item.saltHydraChop.name=Отбивная Гидры с солью
 item.pickledMushgloom.name=Солёный светогриб
 item.saltWortVenison.name=Стейк из оленины с солеросом
 item.saltWortMeefSteak.name=Стейк из минотавра с солеросом
+
+item.bop_poison.name=Яд
+item.bop_saltSaladVeggie.name=Овощной салат с солью
+item.bop_saltSaladShroom.name=Грибной салат с солью
+item.bop_saltRiceBowl.name=Миска риса с солью
+item.bop_pickledTurnip.name=Солёная репа
+item.bop_saltShroomPowder.name=Молотый гриб с солью
 
 achievement.salt=Соль!
 achievement.salt.desc=Найдите соль
