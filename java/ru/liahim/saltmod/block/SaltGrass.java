@@ -6,12 +6,16 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import ru.liahim.saltmod.common.ClientProxy;
+import ru.liahim.saltmod.init.AchievSalt;
 import ru.liahim.saltmod.init.ModBlocks;
+import ru.liahim.saltmod.init.ModItems;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -96,6 +100,70 @@ public class SaltGrass extends Block {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitx, float hity, float hitz) {
+		if (player.capabilities.isCreativeMode) {
+			if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() == ModItems.salt) {
+				int i = world.getBlockMetadata(x, y, z);
+				if (side <= 1) {
+					if (i == 0) i = 3;
+					else if (i < 3 || i > 5) i = 0;
+					else i += 1;}
+				if (side == 2) {
+					if (i == 4) i = 11;
+					else if (i == 5) i = 14;
+					else if (i < 7) i = 7;
+					else if (i == 7) i = 0;
+					else if (i == 8) i = 11;
+					else if (i == 9) i = 15;
+					else if (i == 10) i = 14;
+					else if (i == 11) i = 8;
+					else if (i == 14) i = 10;
+					else if (i < 15) i = 15;
+					else i = 9;}
+				if (side == 5) {
+					if (i == 5) i = 12;
+					else if (i == 6) i = 11;
+					else if (i < 7) i = 8;
+					else if (i == 7) i = 11;
+					else if (i == 8) i = 0;
+					else if (i == 9) i = 12;
+					else if (i == 10) i = 15;
+					else if (i == 11) i = 7;
+					else if (i == 12) i = 9;
+					else if (i < 15) i = 15;
+					else i = 10;}
+				if (side == 3) {
+					if (i == 3) i = 12;
+					else if (i == 6) i = 13;
+					else if (i < 7) i = 9;
+					else if (i == 7) i = 15;
+					else if (i == 8) i = 12;
+					else if (i == 9) i = 0;
+					else if (i == 10) i = 13;
+					else if (i == 12) i = 8;
+					else if (i == 13) i = 10;
+					else if (i < 15) i = 15;
+					else i = 7;}
+				if (side == 4) {
+					if (i == 3) i = 14;
+					else if (i == 4) i = 13;
+					else if (i < 7) i = 10;
+					else if (i == 7) i = 14;
+					else if (i == 8) i = 15;
+					else if (i == 9) i = 13;
+					else if (i == 10) i = 0;
+					else if (i == 13) i = 9;
+					else if (i == 14) i = 7;
+					else if (i < 15) i = 15;
+					else i = 8;}
+				world.setBlock(x, y, z, this, i, 3);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
